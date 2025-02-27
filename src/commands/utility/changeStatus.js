@@ -5,6 +5,47 @@ const { sendErrorToChannel } = require('../../utils/send-error');
 
 const COMMAND_KEYS = Object.keys(MAPPED_STATUS_COMMANDS);
 
+const setThreadNameWithStatus = async ({ channel, newStatus }) => {
+  const emojisRegExp = new RegExp(
+    `(${Object.values(MAPPED_STATUS_COMMANDS).join('|')})`,
+    'ig'
+  );
+
+  const channelName = channel.name.replace(emojisRegExp, '').trim();
+
+  const updatedChannelName = `${newStatus} ${channelName}`;
+  await channel.setName(updatedChannelName);
+};
+
+const updateThreadStatus = async (interaction) => {
+  const { options, channel, user } = interaction;
+  const status = options.getString('status');
+  const message = options.getString('message');
+  const newStatus = MAPPED_STATUS_COMMANDS[status];
+
+  if (!newStatus) {
+    return await interaction.editReply(
+      translateLanguage('changeStatus.invalidStatus')
+    );
+  }
+
+  await setThreadNameWithStatus({ channel, newStatus });
+
+  if (message) {
+    const markdownMessage =
+      `# ${newStatus} ${status.replaceAll('-', ' ')}\n\n` +
+      `${message}\n\n` +
+      `> ${user}`;
+    await channel.send(markdownMessage);
+  }
+
+  await interaction.editReply(
+    translateLanguage('changeStatus.updatedStatus', {
+      status: status.replaceAll('-', ' '),
+    })
+  );
+};
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('change-status')
@@ -36,49 +77,16 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
-      const { options, channel, user } = interaction;
       await interaction.deferReply({ ephemeral: true });
 
-      if (!channel.isThread()) {
+      if (!interaction.channel.isThread()) {
         return await interaction.editReply({
           content: translateLanguage('changeStatus.notAThread'),
           ephemeral: true,
         });
       }
 
-      const status = options.getString('status');
-      const message = options.getString('message');
-      const newStatus = MAPPED_STATUS_COMMANDS[status];
-
-      if (!newStatus) {
-        return await interaction.editReply(
-          translateLanguage('changeStatus.invalidStatus')
-        );
-      }
-
-      const emojisRegExp = new RegExp(
-        `(${Object.values(MAPPED_STATUS_COMMANDS).join('|')})`,
-        'ig'
-      );
-
-      const channelName = channel.name.replace(emojisRegExp, '').trim();
-
-      const updatedChannelName = `${newStatus} ${channelName}`;
-      await channel.setName(updatedChannelName);
-
-      if (message) {
-        const markdownMessage =
-          `# ${newStatus} ${status.replaceAll('-', ' ')}\n\n` +
-          `${message}\n\n` +
-          `> ${user}`;
-        await channel.send(markdownMessage);
-      }
-
-      await interaction.editReply(
-        translateLanguage('changeStatus.updatedStatus', {
-          status: status.replaceAll('-', ' '),
-        })
-      );
+      await updateThreadStatus(interaction);
     } catch (error) {
       console.error(error);
       await sendErrorToChannel(interaction, error);
