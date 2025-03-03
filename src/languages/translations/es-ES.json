@@ -195,7 +195,8 @@
     "reminderUpdated": "✅ ¡Recordatorio actualizado con éxito!",
     "editReminderTitle": "Editar recordatorio",
     "newTimeLabel": "Nueva fecha/hora",
-    "newMessageLabel": "Nuevo mensaje del recordatorio"
+    "newMessageLabel": "Nuevo mensaje del recordatorio",
+    "timeZone": "Selecciona tu zona horaria"
   },
   "interaction": {
     "errorButton": "Hubo un error al procesar la interacción del botón.",
