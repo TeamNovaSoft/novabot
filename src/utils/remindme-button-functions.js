@@ -13,24 +13,29 @@ const {
   formatReminderDate,
 } = require('./remindme-functions');
 
+function getReminder(activeReminders, userId, reminderId) {
+  if (!activeReminders.has(userId)) {
+    return null;
+  }
+  const userReminders = activeReminders.get(userId);
+  return userReminders.find((r) => r.id === reminderId) || null;
+}
+
 async function handleDeleteReminder(
   interaction,
   userId,
   reminderId,
   activeReminders
 ) {
-  if (activeReminders.has(userId)) {
-    const userReminders = activeReminders.get(userId);
-    const reminder = userReminders.find((r) => r.id === reminderId);
-    if (reminder) {
-      cancelReminder(activeReminders, userId, reminderId);
-      await disableReminderButtons(interaction);
-      return replyToInteraction(
-        interaction,
-        translateLanguage('remindme.reminderCanceled'),
-        false
-      );
-    }
+  const reminder = getReminder(activeReminders, userId, reminderId);
+  if (reminder) {
+    cancelReminder(activeReminders, userId, reminderId);
+    await disableReminderButtons(interaction);
+    return replyToInteraction(
+      interaction,
+      translateLanguage('remindme.reminderCanceled'),
+      false
+    );
   }
   return replyToInteraction(
     interaction,
@@ -46,20 +51,17 @@ async function handleSetInterval(
   activeReminders,
   startReminder
 ) {
-  if (activeReminders.has(userId)) {
-    const userReminders = activeReminders.get(userId);
-    const reminder = userReminders.find((r) => r.id === reminderId);
-    if (reminder) {
-      const { message, timeInMsFromNow } = reminder;
-      const newReminderDate = new Date(Date.now() + timeInMsFromNow);
-      await disableReminderButtons(interaction);
-      return startReminder(
-        interaction,
-        newReminderDate,
-        message,
-        timeInMsFromNow
-      );
-    }
+  const reminder = getReminder(activeReminders, userId, reminderId);
+  if (reminder) {
+    const { message, timeInMsFromNow } = reminder;
+    const newReminderDate = new Date(Date.now() + timeInMsFromNow);
+    await disableReminderButtons(interaction);
+    return startReminder(
+      interaction,
+      newReminderDate,
+      message,
+      timeInMsFromNow
+    );
   }
   return replyToInteraction(
     interaction,
@@ -74,35 +76,32 @@ async function handleEditReminder(
   reminderId,
   activeReminders
 ) {
-  if (activeReminders.has(userId)) {
-    const userReminders = activeReminders.get(userId);
-    const reminder = userReminders.find((r) => r.id === reminderId);
-    if (reminder) {
-      const { reminderDate, message } = reminder;
-      const formattedTime = formatReminderDate(reminderDate);
-      const modal = new ModalBuilder()
-        .setCustomId(`edit_reminder_modal_${reminderId}`)
-        .setTitle(translateLanguage('remindme.editReminderTitle'));
-      modal.addComponents(
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('time_input')
-            .setLabel(translateLanguage('remindme.newTimeLabel'))
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true)
-            .setValue(formattedTime)
-        ),
-        new ActionRowBuilder().addComponents(
-          new TextInputBuilder()
-            .setCustomId('message_input')
-            .setLabel(translateLanguage('remindme.newMessageLabel'))
-            .setStyle(TextInputStyle.Paragraph)
-            .setRequired(true)
-            .setValue(message)
-        )
-      );
-      return interaction.showModal(modal);
-    }
+  const reminder = getReminder(activeReminders, userId, reminderId);
+  if (reminder) {
+    const { reminderDate, message } = reminder;
+    const formattedTime = formatReminderDate(reminderDate);
+    const modal = new ModalBuilder()
+      .setCustomId(`edit_reminder_modal_${reminderId}`)
+      .setTitle(translateLanguage('remindme.editReminderTitle'));
+    modal.addComponents(
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('time_input')
+          .setLabel(translateLanguage('remindme.newTimeLabel'))
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true)
+          .setValue(formattedTime)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('message_input')
+          .setLabel(translateLanguage('remindme.newMessageLabel'))
+          .setStyle(TextInputStyle.Paragraph)
+          .setRequired(true)
+          .setValue(message)
+      )
+    );
+    return interaction.showModal(modal);
   }
   return replyToInteraction(
     interaction,
@@ -120,7 +119,14 @@ async function updateReminder(
   newReminderDate,
   newMessage
 ) {
-  const reminder = activeReminders.get(userId).find((r) => r.id === reminderId);
+  const reminder = getReminder(activeReminders, userId, reminderId);
+  if (!reminder) {
+    return replyToInteraction(
+      interaction,
+      translateLanguage('remindme.noActiveReminders'),
+      true
+    );
+  }
   await disableReminderButtons(reminder.reply);
   cancelReminder(activeReminders, userId, reminderId);
   await startReminder(
@@ -139,6 +145,7 @@ async function updateReminder(
     ? interaction.reply(updatedResponse)
     : interaction.followUp(updatedResponse);
 }
+
 async function handleEditReminderModal(
   interaction,
   userId,
@@ -156,14 +163,7 @@ async function handleEditReminderModal(
       true
     );
   }
-  if (!activeReminders.has(userId)) {
-    return replyToInteraction(
-      interaction,
-      translateLanguage('remindme.noActiveReminders'),
-      true
-    );
-  }
-  const reminder = activeReminders.get(userId).find((r) => r.id === reminderId);
+  const reminder = getReminder(activeReminders, userId, reminderId);
   if (!reminder) {
     return replyToInteraction(
       interaction,
