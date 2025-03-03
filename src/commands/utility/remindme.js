@@ -13,7 +13,7 @@ const {
   handleSetInterval,
   handleEditReminder,
   handleEditReminderModal,
-} = require('../../utils/remidme-button-functions');
+} = require('../../utils/remindme-button-functions');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { TIME_ZONES } = require('../../config');
 
@@ -46,7 +46,7 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName('timezone')
-        .setDescription('Selecciona tu zona horaria')
+        .setDescription('remindme.timeZone')
         .setRequired(true)
         .addChoices(
           ...TIME_ZONES.map((tz) => ({ name: tz.name, value: tz.value }))

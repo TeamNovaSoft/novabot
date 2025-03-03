@@ -194,7 +194,8 @@
     "reminderUpdated": "✅ Reminder updated successfully!",
     "editReminderTitle": "Edit Reminder",
     "newTimeLabel": "New Date/Time",
-    "newMessageLabel": "New Reminder Message"
+    "newMessageLabel": "New Reminder Message",
+    "timeZone": "Select your time zone"
   },
   "interaction": {
     "errorButton": "There was an error processing your button interaction.",

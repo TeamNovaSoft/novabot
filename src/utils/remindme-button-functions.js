@@ -13,9 +13,6 @@ const {
   formatReminderDate,
 } = require('./remindme-functions');
 
-/**
- * Maneja la acción de eliminar un recordatorio.
- */
 async function handleDeleteReminder(
   interaction,
   userId,
@@ -42,9 +39,6 @@ async function handleDeleteReminder(
   );
 }
 
-/**
- * Maneja la acción de reiniciar el intervalo del recordatorio.
- */
 async function handleSetInterval(
   interaction,
   userId,
@@ -74,9 +68,6 @@ async function handleSetInterval(
   );
 }
 
-/**
- * Maneja la acción de editar el recordatorio (abre el modal).
- */
 async function handleEditReminder(
   interaction,
   userId,
