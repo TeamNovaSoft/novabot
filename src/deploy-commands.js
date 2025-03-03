@@ -33,9 +33,9 @@ const commandList = [
   votePointsCommand,
 ];
 
-const commands = [];
-
 function registerCommands(client) {
+  const commands = [];
+
   for (const command of commandList) {
     if ('data' in command && 'execute' in command) {
       commands.push(command.data.toJSON());
