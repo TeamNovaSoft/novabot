@@ -41,6 +41,7 @@ function registerCommands(client) {
       commands.push(command.data.toJSON());
       client.commands.set(command.data.name, command);
     } else {
+      // This stops the execution and alerts that a misconfigured command has been imported.
       throw new Error(
         `The command ${command.name || command} is missing a required "data" or "execute" property.`
       );
