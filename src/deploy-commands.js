@@ -16,59 +16,55 @@ const serverCommand = require('./commands/utility/server');
 const userCommand = require('./commands/utility/user');
 const votePointsCommand = require('./commands/utility/vote-points');
 
-module.exports = (client) => {
-  const commands = [];
+const commandList = [
+  pingCommand,
+  assingMeTaskCommand,
+  changeStatusCommand,
+  convertTimeCommand,
+  myPointsCommand,
+  prTemplateCommand,
+  remindMeCommand,
+  requestPointCommand,
+  searchCodeCommand,
+  searchMyPointsCommand,
+  sendMessageCommand,
+  serverCommand,
+  userCommand,
+  votePointsCommand,
+];
 
-  const commandList = [
-    pingCommand,
-    assingMeTaskCommand,
-    changeStatusCommand,
-    convertTimeCommand,
-    myPointsCommand,
-    prTemplateCommand,
-    remindMeCommand,
-    requestPointCommand,
-    searchCodeCommand,
-    searchMyPointsCommand,
-    sendMessageCommand,
-    serverCommand,
-    userCommand,
-    votePointsCommand,
-  ]; // Agrega más comandos aquí
+const commands = [];
 
+function registerCommands(client) {
   for (const command of commandList) {
     if ('data' in command && 'execute' in command) {
       commands.push(command.data.toJSON());
       client.commands.set(command.data.name, command);
     } else {
-      console.log(
-        `[WARNING] The command ${command} is missing a required "data" or "execute" property.`
+      throw new Error(
+        `The command ${command.name || command} is missing a required "data" or "execute" property.`
       );
     }
   }
 
-  deployCommands(
-    commands,
-    DISCORD_SERVER.discordToken,
-    DISCORD_SERVER.discordClientId,
-    DISCORD_SERVER.discordGuildId
-  );
-};
+  deployCommands(commands);
+}
 
-function deployCommands(commands, token, clientId, guildId) {
-  const rest = new REST().setToken(token);
+function deployCommands(commands) {
+  const rest = new REST().setToken(DISCORD_SERVER.discordToken);
 
   const init = async () => {
     try {
       console.log(
         `Started refreshing ${commands.length} application (/) commands.`
       );
-
       const data = await rest.put(
-        Routes.applicationGuildCommands(clientId, guildId),
+        Routes.applicationGuildCommands(
+          DISCORD_SERVER.discordClientId,
+          DISCORD_SERVER.discordGuildId
+        ),
         { body: commands }
       );
-
       console.log(
         `Successfully reloaded ${data.length} application (/) commands.`
       );
@@ -79,3 +75,5 @@ function deployCommands(commands, token, clientId, guildId) {
 
   init();
 }
+
+module.exports = registerCommands;
