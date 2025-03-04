@@ -3,7 +3,27 @@ const { translateLanguage } = require('../languages');
 const { EmbedBuilder } = require('discord.js');
 const { getGitHubIssueURL } = require('./githubIssue');
 
+/**
+ * Maximum character length for a Discord embed description.
+ *
+ * This constant is based on the limit defined by Discord's API.
+ * Exceeding this limit will result in an error when attempting to send the embed.
+ *
+ * @see {@link https://discordjs.guide/popular-topics/embeds.html#embed-limits}
+ * @type {number}
+ */
 const MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH = 4096;
+
+/**
+ * Maximum character length for an error message (regular message).
+ *
+ * This constant defines the upper limit for the length of error messages
+ * sent to Discord (regular text messages).
+ * It's used to prevent exceeding Discord's normal message size limits and ensure that
+ * error reports are delivered successfully.
+ *
+ * @type {number}
+ */
 const MAX_ERROR_MESSAGE_LENGTH = 1000;
 const GITHUB_IMAGE_LOGO =
   'https://github.githubassets.com/assets/github-mark-57519b92ca4e.png';
