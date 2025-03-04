@@ -3,14 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { DISCORD_SERVER } = require('./config');
 
-module.exports = (client) => {
-  const commands = [];
+function loadCommands(commands, client) {
   const foldersPath = path.join(__dirname, 'commands');
   const commandFolders = fs.readdirSync(foldersPath);
-  const token = DISCORD_SERVER.discordToken;
-  const clientId = DISCORD_SERVER.discordClientId;
-  const guildId = DISCORD_SERVER.discordGuildId;
-
   for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
     const commandFiles = fs
@@ -28,6 +23,15 @@ module.exports = (client) => {
       }
     }
   }
+}
+
+module.exports = (client) => {
+  const commands = [];
+  const token = DISCORD_SERVER.discordToken;
+  const clientId = DISCORD_SERVER.discordClientId;
+  const guildId = DISCORD_SERVER.discordGuildId;
+
+  loadCommands(commands, client);
 
   const rest = new REST().setToken(token);
 
