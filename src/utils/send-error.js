@@ -48,9 +48,8 @@ function createEmbedMessage(
         commandName,
         user,
         additionalInfo
-      )
-    )
-    .slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH);
+      ).slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH)
+    );
 }
 
 function buildEmbedDescription(
@@ -118,34 +117,41 @@ function buildTextErrorMessage(
 }
 
 async function sendErrorToChannel(source, error, additionalInfo = {}) {
-  const { client, commandName, user, interaction } = extractSourceDetails(
-    source,
-    additionalInfo
-  );
-  const errorChannelID = process.env.ERROR_CHANNEL_ID;
-  const errorChannel = client.channels.cache.get(errorChannelID);
+  try {
+    const { client, commandName, user, interaction } = extractSourceDetails(
+      source,
+      additionalInfo
+    );
+    const errorChannelID = process.env.ERROR_CHANNEL_ID;
+    const errorChannel = client.channels.cache.get(errorChannelID);
 
-  if (!errorChannel || !errorChannel.isTextBased()) {
-    await notifyUserInteraction(interaction, errorChannelID);
-    return;
-  }
+    if (!errorChannel || !errorChannel.isTextBased()) {
+      await notifyUserInteraction(interaction, errorChannelID);
+      return;
+    }
 
-  const errorMessage = buildErrorMessage({
-    error,
-    commandName,
-    user,
-    additionalInfo,
-  });
-  await sendErrorMessage(errorChannel, errorMessage);
-  if (interaction && interaction.isRepliable()) {
-    await notifyUserFollowUp(interaction);
+    const errorMessage = buildErrorMessage({
+      error,
+      commandName,
+      user,
+      additionalInfo,
+    });
+    await sendErrorMessage(errorChannel, errorMessage);
+
+    if (interaction && interaction.isRepliable()) {
+      await notifyUserFollowUp(interaction);
+    }
+  } catch (err) {
+    console.error('Failed to send error to channel:', err);
   }
 }
 
 async function sendErrorMessage(errorChannel, errorMessage) {
   try {
     await errorChannel.send(
-      errorMessage.data ? { embeds: [errorMessage] } : errorMessage
+      typeof errorMessage === 'string'
+        ? errorMessage
+        : { embeds: [errorMessage] }
     );
   } catch (err) {
     console.error(translateLanguage('sendChannelError.couldNotSend'), err);
@@ -180,7 +186,7 @@ async function notifyUserInteraction(interaction, errorChannelID) {
     try {
       await interaction.reply({
         content: translateLanguage('sendChannelError.channelNotFound'),
-        ephemeral: true,
+        flags: 64,
       });
     } catch (err) {
       console.error(
