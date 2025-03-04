@@ -1,9 +1,8 @@
 const { REST, Routes } = require('discord.js');
-const { DISCORD_SERVER } = require('./config');
-const commandList = require('./utils/commandList');
+const { DISCORD_SERVER } = require('../config');
+const commandList = require('./utility/commandList');
 
 function registerCommands(client) {
-  // Build the array of commands using reduce
   const commands = commandList.reduce((acc, command) => {
     if (!command?.data || !command?.execute) {
       throw new Error(
@@ -14,12 +13,10 @@ function registerCommands(client) {
     return acc;
   }, []);
 
-  // Delegate both the deployment to Discord and the assignment of commands to the client
   deployCommands(client, commandList, commands);
 }
 
 function deployCommands(client, commandList, commands) {
-  // Assign each command to the client's collection
   commandList.forEach((command) => {
     client.commands.set(command.data.name, command);
   });

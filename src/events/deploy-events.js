@@ -1,4 +1,4 @@
-const eventList = require('./utils/eventList');
+const eventList = require('./eventList');
 
 module.exports = (client) => {
   for (const event of eventList) {
