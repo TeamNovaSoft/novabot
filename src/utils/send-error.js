@@ -48,7 +48,7 @@ function createEmbedMessage(
         commandName,
         user,
         additionalInfo
-      ).slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH)
+      )
     );
 }
 
@@ -59,13 +59,15 @@ function buildEmbedDescription(
   user,
   additionalInfo
 ) {
-  return `**${translateLanguage('sendChannelError.commandLabel')}** ${commandName}\n
-  ${user !== translateLanguage('sendChannelError.unknownUser') ? `**${translateLanguage('sendChannelError.userLabel')}** ${user}\n` : ''}
-  ${additionalInfo.channel ? `**${translateLanguage('sendChannelError.channelLabel')}** ${additionalInfo.channel}\n` : ''}
+  const description = `**${translateLanguage('sendChannelError.commandLabel')}** ${commandName}\n
+    ${user !== translateLanguage('sendChannelError.unknownUser') ? `**${translateLanguage('sendChannelError.userLabel')}** ${user}\n` : ''}
+    ${additionalInfo.channel ? `**${translateLanguage('sendChannelError.channelLabel')}** ${additionalInfo.channel}\n` : ''}
+  
+    **${translateLanguage('sendChannelError.errorLabel')}** \`\`\`js\n${errorStack}\n\`\`\`
+  
+    ${gitHubIssueURL ? `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${gitHubIssueURL})` : ''}`;
 
-  **${translateLanguage('sendChannelError.errorLabel')}** \`\`\`js\n${errorStack}\n\`\`\`
-
-  ${gitHubIssueURL ? `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${gitHubIssueURL})` : ''}`;
+  return description.slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH); // ✅ Moved here
 }
 
 function buildErrorMessage({ error, commandName, user, additionalInfo }) {
