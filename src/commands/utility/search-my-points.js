@@ -5,6 +5,33 @@ const { sendErrorToChannel } = require('../../utils/send-error');
 
 const tagIds = VOTE_POINTS.TAG_IDS;
 
+function buildDateStrings(year, month) {
+  const targetStartDate = new Date(year, month - 1, 0);
+  const targetEndDate = new Date(year, month, 1);
+  const startDateStr = `${targetStartDate.getFullYear()}-${String(
+    targetStartDate.getMonth() + 1
+  ).padStart(2, '0')}-${String(targetStartDate.getDate()).padStart(2, '0')}`;
+  const endDateStr = `${targetEndDate.getFullYear()}-${String(
+    targetEndDate.getMonth() + 1
+  ).padStart(2, '0')}-01`;
+  return { startDateStr, endDateStr };
+}
+
+function buildQueryStrings({
+  startDateStr,
+  endDateStr,
+  channelQueryParts,
+  userId,
+}) {
+  const escapedUserId = `<@${userId}>`;
+  return {
+    openedPRs: `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} Author: ${escapedUserId}`,
+    taskCompletedQuery: `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} <@&${tagIds.taskCompletedTagId}> ${escapedUserId}`,
+    addPointQuery: `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} <@&${tagIds.addPointTagId}> ${escapedUserId}`,
+    boostedPointQuery: `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} <@&${tagIds.boostedPointTagId}> ${escapedUserId}`,
+  };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('my-points-query')
@@ -55,40 +82,24 @@ module.exports = {
       const month =
         interaction.options.getInteger('month') || currentDate.getMonth() + 1;
       const user = interaction.options.getUser('user') || interaction.user;
-
       const channelsInput = interaction.options.getString('channels');
       const channels = channelsInput
         ? channelsInput.split(',').map((channel) => channel.trim())
         : [];
-
-      const targetStartDate = new Date(year, month - 1, 0);
-      const targetEndDate = new Date(year, month, 1);
-
-      const startDateStr = `${targetStartDate.getFullYear()}-${String(
-        targetStartDate.getMonth() + 1
-      ).padStart(2, '0')}-${String(targetStartDate.getDate())}`;
-      const endDateStr = `${targetEndDate.getFullYear()}-${String(
-        targetEndDate.getMonth() + 1
-      ).padStart(2, '0')}-01`;
-
-      const escapedUserId = `<@${user.id}>`;
-
       const channelQueryParts = channels.length
-        ? channels.map((channel) => `in:${channel}`).join(' ')
+        ? channels.map((ch) => `in:${ch}`).join(' ')
         : '';
 
-      const openedPRs = `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} Author: ${escapedUserId}`;
-      const taskCompletedQuery = `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} <@&${tagIds.taskCompletedTagId}> ${escapedUserId}`;
-      const addPointQuery = `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} <@&${tagIds.addPointTagId}> ${escapedUserId}`;
-      const boostedPointQuery = `before: ${endDateStr} after: ${startDateStr} ${channelQueryParts} <@&${tagIds.boostedPointTagId}> ${escapedUserId}`;
+      const { startDateStr, endDateStr } = buildDateStrings(year, month);
+      const queries = buildQueryStrings({
+        startDateStr,
+        endDateStr,
+        channelQueryParts,
+        userId: user.id,
+      });
 
       await interaction.reply({
-        content: translateLanguage('searchMyPoints.reply', {
-          openedPRs,
-          taskCompletedQuery,
-          addPointQuery,
-          boostedPointQuery,
-        }),
+        content: translateLanguage('searchMyPoints.reply', queries),
         ephemeral: true,
       });
     } catch (error) {
