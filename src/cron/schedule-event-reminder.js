@@ -19,6 +19,24 @@ const clearAllCronJobs = () => {
   activeCronJobs = [];
 };
 
+const generateReminderCronExpression = (event) => {
+  const now = new Date();
+  const eventEndTimeDate = new Date(event.scheduledEndTimestamp);
+  const timeDifference = eventEndTimeDate - now;
+
+  const reminderTime = new Date(
+    timeDifference > dayInMilliseconds
+      ? eventEndTimeDate - dayInMilliseconds
+      : eventEndTimeDate - hoursInMilliseconds
+  );
+
+  if (reminderTime < now) {
+    return null;
+  }
+
+  return dateToCronExpression(reminderTime);
+};
+
 /**
  * @typedef {import('discord.js').Client} Client
  */
@@ -32,21 +50,11 @@ const clearAllCronJobs = () => {
  * @param {string} timeZone - The timezone to use for scheduling the reminder.
  */
 const scheduleEventReminder = ({ client, event, channelId, timeZone }) => {
-  const now = new Date();
-  const eventEndTimeDate = new Date(event.scheduledEndTimestamp);
-  const timeDifference = eventEndTimeDate - now;
+  const cronExpression = generateReminderCronExpression(event);
 
-  const reminderTime = new Date(
-    timeDifference > dayInMilliseconds
-      ? eventEndTimeDate - dayInMilliseconds
-      : eventEndTimeDate - hoursInMilliseconds
-  );
-
-  if (reminderTime < now) {
+  if (!cronExpression) {
     return;
   }
-
-  const cronExpression = dateToCronExpression(reminderTime);
 
   const job = new CronJob(
     cronExpression,
