@@ -1,6 +1,6 @@
 const { REST, Routes } = require('discord.js');
 const { DISCORD_SERVER } = require('../config');
-const commandList = require('./utility/commandList');
+const commandList = require('./commandList');
 
 function registerCommands(client) {
   const commands = commandList.reduce((acc, command) => {
