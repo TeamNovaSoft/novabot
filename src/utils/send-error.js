@@ -186,7 +186,7 @@ async function notifyUserInteraction(interaction, errorChannelID) {
     try {
       await interaction.reply({
         content: translateLanguage('sendChannelError.channelNotFound'),
-        flags: 64,
+        ephemeral: true,
       });
     } catch (err) {
       console.error(
