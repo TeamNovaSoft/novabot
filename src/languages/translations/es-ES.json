@@ -102,7 +102,8 @@
     "saturday": "Sábado",
     "sunday": "Domingo",
     "calendarEventCollector": "Calendario de eventos programado para ejecutarse de {{readableDays}}, de {{hoursRange}} cada {{eachMinute}} minutos (hora Colombia).",
-    "reminderDiscordEvent": "Recordatorio: el evento \"{{eventName}}\" está a punto de finalizar pronto. ¡Únete o finaliza tus actividades si quieres participar!"
+    "reminderDiscordEvent": "Recordatorio: el evento \"{{eventName}}\" está a punto de finalizar pronto. ¡Únete o finaliza tus actividades si quieres participar!",
+    "eventAlreadyEndedError": "El evento ha terminado, el recordatorio ha caducado."
   },
   "messageSchedules": {
     "errorMissingParameters": "Error: Falta uno o más parámetros requeridos (client, channel, message, datetime, o timeZone).",
