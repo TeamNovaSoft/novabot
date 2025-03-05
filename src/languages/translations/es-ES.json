@@ -201,5 +201,17 @@
   "interaction": {
     "errorButton": "Hubo un error al procesar la interacción del botón.",
     "errorSubmission": "Hubo un error al procesar tu envío."
+  },
+
+  "assignPoints": {
+    "description": "Asignar puntos manualmente a un usuario (solo rol admin)",
+    "userOption": "Usuario que recibirá los puntos",
+    "pointTypeOption": "Tipo de puntos a asignar",
+    "cantidadOption": "Cantidad de puntos a asignar",
+    "reasonOption": "Razón para asignar el punto",
+    "noPermission": "No tienes permiso para usar este comando.",
+    "orderReceived": "Orden recibida. Asignando {{quantity}} {{pointType}} punto(s) a {{target}}.",
+    "reasonLabel": "Razón:",
+    "errorAssigning": "Hubo un error al asignar puntos. Por favor, intenta de nuevo más tarde."
   }
 }
