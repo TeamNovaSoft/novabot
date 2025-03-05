@@ -20,9 +20,16 @@ const clearAllCronJobs = () => {
 };
 
 const sendCalendarEventNotification = async (client, event) => {
-  const currentChannel = await client.channels.cache.get(
+  const calendarChannel = await client.channels.cache.get(
     FIREBASE_CONFIG.channelCalendarId
   );
+
+  if (!calendarChannel) {
+    return console.log(
+      translateLanguage('calendarSchedules.errorChannelNotFound')
+    );
+  }
+
   const embed = new EmbedBuilder()
     .setColor('#0099ff')
     .setTitle(translateLanguage('calendarSchedules.notificationMessage'))
@@ -39,11 +46,7 @@ const sendCalendarEventNotification = async (client, event) => {
     });
   }
 
-  if (currentChannel) {
-    currentChannel.send({ embeds: [embed] });
-  } else {
-    console.log(translateLanguage('calendarSchedules.errorChannelNotFound'));
-  }
+  calendarChannel.send({ embeds: [embed] });
 };
 
 /**
