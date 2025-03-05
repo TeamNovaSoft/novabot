@@ -1,8 +1,8 @@
 require('dotenv').config();
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { DISCORD_SERVER } = require('./config');
-const deployEvents = require('./deploy-events');
-const deployCommands = require('./deploy-commands');
+const deployEvents = require('./events/deploy-events');
+const deployCommands = require('./commands/deploy-commands');
 const saveErrorLog = require('./utils/log-error');
 const { sendErrorToChannel } = require('./utils/send-error');
 const { scheduleJobs } = require('./schedule-jobs');
