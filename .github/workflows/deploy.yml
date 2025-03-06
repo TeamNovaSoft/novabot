@@ -1,4 +1,5 @@
 name: Deploy to AWS
+
 on:
   pull_request:
     types:
@@ -9,13 +10,29 @@ on:
       - '**/*.ts'
     branches:
       - main
+      - staging
 
 jobs:
-  if_merged:
+  deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
+      - name: Determine environment
+        id: set-env
+        run: |
+          if [[ "${{ github.base_ref }}" == "main" ]]; then
+            echo "ENV=production" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=/home/ubuntu/prod" >> $GITHUB_ENV
+            echo "PM2_NAME=bot-prod" >> $GITHUB_ENV
+          elif [[ "${{ github.base_ref }}" == "staging" ]]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=/home/ubuntu/staging" >> $GITHUB_ENV
+            echo "PM2_NAME=bot-staging" >> $GITHUB_ENV
+          else
+            echo "Skipping deployment"
+            exit 1
+          fi
+
       - name: 📂 Setting up SSH access
         run: |
           mkdir -p ~/.ssh
@@ -25,9 +42,9 @@ jobs:
 
       - name: 🚀 Deploy on AWS
         run: |
-          ssh -i ~/.ssh/aws_key.pem ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }} << 'EOF'
-            cd ${{ secrets.AWS_WORK_DIRECTORY }}
-            git pull origin main
-            yarn
-            pm2 restart ecosystem.config.js
+          ssh -i ~/.ssh/aws_key.pem ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }} << EOF
+            cd $DEPLOY_PATH
+            git pull origin $ENV
+            yarn install
+            pm2 restart $PM2_NAME || pm2 start ecosystem.config.js --name "$PM2_NAME"
           EOF
