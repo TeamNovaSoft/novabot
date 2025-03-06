@@ -24,8 +24,14 @@ module.exports = {
         )
         .setRequired(true)
         .addChoices(
-          { name: 'Normal Points', value: 'normal' },
-          { name: 'Boosted Points', value: 'boosted' }
+          {
+            name: translateLanguage('assignPoints.normalPoints'),
+            value: 'normal',
+          },
+          {
+            name: translateLanguage('assignPoints.boostedPoints'),
+            value: 'boosted',
+          }
         )
     )
     .addIntegerOption((option) =>

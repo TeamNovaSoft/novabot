@@ -212,6 +212,8 @@
     "noPermission": "No tienes permiso para usar este comando.",
     "orderReceived": "Orden recibida. Asignando {{quantity}} {{pointType}} punto(s) a {{target}}.",
     "reasonLabel": "Razón:",
-    "errorAssigning": "Hubo un error al asignar puntos. Por favor, intenta de nuevo más tarde."
+    "errorAssigning": "Hubo un error al asignar puntos. Por favor, intenta de nuevo más tarde.",
+    "normalPoints": "puntos normales",
+    "boostedPoints": "puntos potenciados"
   }
 }

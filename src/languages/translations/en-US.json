@@ -211,6 +211,8 @@
     "noPermission": "You don't have permission to use this command.",
     "orderReceived": "Order received. Assigning {{quantity}} {{pointType}} point(s) to {{target}}.",
     "reasonLabel": "Reason:",
-    "errorAssigning": "There was an error assigning points. Please try again later."
+    "errorAssigning": "There was an error assigning points. Please try again later.",
+    "normalPoints": "Normal Points",
+    "boostedPoints": "Boosted Points"
   }
 }
