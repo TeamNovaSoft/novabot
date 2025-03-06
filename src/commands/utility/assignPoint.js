@@ -74,13 +74,13 @@ module.exports = {
         ephemeral: true,
       });
 
-      const pointsLines = Array.from(
-        { length: quantity },
-        () => `${roleMention} ${targetUser}`
-      ).join('\n');
-      const fullMessage = `${pointsLines}\n\n${translateLanguage('assignPoints.reasonLabel')}\n${reason}\n\nBy ${interaction.user}`;
+      for (let i = 0; i < quantity; i++) {
+        await interaction.channel.send(`${roleMention} ${targetUser}`);
+      }
 
-      await interaction.channel.send(fullMessage);
+      await interaction.channel.send(
+        `${translateLanguage('assignPoints.reasonLabel')}\n${reason}\n\nBy ${interaction.user}`
+      );
     } catch (error) {
       await sendErrorToChannel(interaction, error);
       return interaction.reply({
