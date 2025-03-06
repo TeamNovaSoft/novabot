@@ -82,7 +82,10 @@
     "drawNotSupported": "The draw is not supported.",
     "invalidResult": "The result was not valid or no points were awarded.",
     "notFindChannel": "Could not find the channel",
-    "errorOcurred": "An error occurred while processing the poll result."
+    "errorOcurred": "An error occurred while processing the poll result.",
+    "notFoundPollDescription": "Not found poll description",
+    "notFoundDescriptionParts": "Not found pointType or userId or both on poll description",
+    "notFinalResultFound": "Not final result found. Probably points in this poll not were awarded"
   },
   "calendarSchedules": {
     "errorMissingParameters": "Error: Missing one or more required parameters (client, event, event.start.dateTime, or timeZone).",
