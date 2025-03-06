@@ -156,7 +156,7 @@ async function sendErrorMessage(errorChannel, errorMessage) {
         : { embeds: [errorMessage] }
     );
   } catch (err) {
-    console.error(translateLanguage('sendChannelError.couldNotSend'), err);
+    console.error(err);
   }
 }
 
@@ -192,7 +192,6 @@ async function notifyUserInteraction(interaction, errorChannelID) {
       });
     } catch (err) {
       console.error(
-        translateLanguage('sendChannelError.couldNotSendToUser'),
         `Failed to find error channel with ID: ${errorChannelID}`,
         err
       );
@@ -207,10 +206,7 @@ async function notifyUserFollowUp(interaction) {
       ephemeral: true,
     });
   } catch (err) {
-    console.error(
-      translateLanguage('sendChannelError.couldNotSendToUser'),
-      err
-    );
+    console.error(err);
   }
 }
 
