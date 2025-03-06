@@ -67,7 +67,7 @@ function buildEmbedDescription(
   
     ${gitHubIssueURL ? `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${gitHubIssueURL})` : ''}`;
 
-  return description.slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH); // ✅ Moved here
+  return description.slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH);
 }
 
 function buildErrorMessage({ error, commandName, user, additionalInfo }) {
