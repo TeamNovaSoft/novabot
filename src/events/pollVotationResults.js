@@ -15,7 +15,7 @@ const parseQuestionInput = (questionFields) => {
   );
 
   if (!questionField) {
-    return null;
+    throw new Error(translateLanguage('votePoints.notFoundPollDescription'));
   }
 
   const parts = (questionField.value || '')
@@ -23,7 +23,7 @@ const parseQuestionInput = (questionFields) => {
     .map((part) => part.trim());
 
   if (parts.length < 2) {
-    return;
+    throw new Error(translateLanguage('votePoints.notFoundDescriptionParts'));
   }
 
   return {
@@ -38,8 +38,9 @@ const getFinalResult = (questionFields) => {
   );
 
   if (!finalResultField?.value) {
-    return null;
+    throw new Error(translateLanguage('votePoints.notFinalResultFound'));
   }
+
   const finalResult = parseInt(finalResultField.value || '0', 10);
 
   return !finalResult || isNaN(finalResult) ? null : finalResult;
