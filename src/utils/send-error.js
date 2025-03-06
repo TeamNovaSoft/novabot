@@ -156,7 +156,7 @@ async function sendErrorMessage(errorChannel, errorMessage) {
         : { embeds: [errorMessage] }
     );
   } catch (err) {
-    console.error(err);
+    console.error('Error to send message', err);
   }
 }
 
@@ -206,7 +206,7 @@ async function notifyUserFollowUp(interaction) {
       ephemeral: true,
     });
   } catch (err) {
-    console.error(err);
+    console.error('Error to notify user', err);
   }
 }
 
