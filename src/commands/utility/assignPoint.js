@@ -2,8 +2,6 @@ const { SlashCommandBuilder } = require('discord.js');
 const { sendErrorToChannel } = require('../../utils/send-error');
 const { VOTE_POINTS, ADMIN_ROLE_ID } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
-const tagIds = VOTE_POINTS.TAG_IDS;
-const adminRoleId = ADMIN_ROLE_ID.adminRole;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -50,7 +48,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    if (!interaction.member.roles.cache.has(adminRoleId)) {
+    if (!interaction.member.roles.cache.has(ADMIN_ROLE_ID.adminRole)) {
       return interaction.reply({
         content: translateLanguage('assignPoints.noPermission'),
         ephemeral: true,
@@ -62,9 +60,10 @@ module.exports = {
       reason = interaction.options.getString('reason'),
       tagId =
         pointType === 'boosted'
-          ? tagIds.boostedPointTagId
-          : tagIds.addPointTagId,
+          ? VOTE_POINTS.TAG_IDS.boostedPointTagId
+          : VOTE_POINTS.TAG_IDS.addPointTagId,
       roleMention = `<@&${tagId}>`;
+
     try {
       await interaction.reply({
         content: translateLanguage('assignPoints.orderReceived', {
