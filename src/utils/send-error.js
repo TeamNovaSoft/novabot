@@ -25,9 +25,50 @@ const MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH = 4096;
  * @type {number}
  */
 const MAX_ERROR_MESSAGE_LENGTH = 1000;
-
 const GITHUB_IMAGE_LOGO =
   'https://github.githubassets.com/assets/github-mark-57519b92ca4e.png';
+
+function createEmbedMessage(
+  title,
+  errorStack,
+  gitHubIssueURL,
+  commandName,
+  user,
+  additionalInfo
+) {
+  return new EmbedBuilder()
+    .setColor('#0099ff')
+    .setTitle(`**${title}**\n`)
+    .setThumbnail(GITHUB_IMAGE_LOGO)
+    .setURL(gitHubIssueURL)
+    .setDescription(
+      buildEmbedDescription(
+        errorStack,
+        gitHubIssueURL,
+        commandName,
+        user,
+        additionalInfo
+      )
+    );
+}
+
+function buildEmbedDescription(
+  errorStack,
+  gitHubIssueURL,
+  commandName,
+  user,
+  additionalInfo
+) {
+  const description = `**${translateLanguage('sendChannelError.commandLabel')}** ${commandName}\n
+    ${user !== translateLanguage('sendChannelError.unknownUser') ? `**${translateLanguage('sendChannelError.userLabel')}** ${user}\n` : ''}
+    ${additionalInfo.channel ? `**${translateLanguage('sendChannelError.channelLabel')}** ${additionalInfo.channel}\n` : ''}
+  
+    **${translateLanguage('sendChannelError.errorLabel')}** \`\`\`js\n${errorStack}\n\`\`\`
+  
+    ${gitHubIssueURL ? `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${gitHubIssueURL})` : ''}`;
+
+  return description.slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH);
+}
 
 function buildErrorMessage({ error, commandName, user, additionalInfo }) {
   const title = `Error: ${error.message.slice(0, 200)}. ${translateLanguage('sendChannelError.errorReport')}`;
@@ -35,128 +76,137 @@ function buildErrorMessage({ error, commandName, user, additionalInfo }) {
   const gitHubIssueURL = getGitHubIssueURL(errorStack);
 
   if (errorStack.length >= MAX_ERROR_MESSAGE_LENGTH) {
-    const embedMessage = new EmbedBuilder()
-      .setColor('#0099ff')
-      .setTitle(`**${title}**\n`)
-      .setThumbnail(GITHUB_IMAGE_LOGO)
-      .setURL(gitHubIssueURL)
-      .setDescription(
-        `
-        **${translateLanguage('sendChannelError.commandLabel')}** ${commandName}\n
-        ${
-          user !== translateLanguage('sendChannelError.unknownUser')
-            ? `**${translateLanguage('sendChannelError.userLabel')}** ${user}\n`
-            : ''
-        }
-        ${
-          additionalInfo.channel
-            ? `**${translateLanguage('sendChannelError.channelLabel')}** ${additionalInfo.channel}\n`
-            : ''
-        }
-
-        **${translateLanguage('sendChannelError.errorLabel')}** \`\`\`js\n${errorStack}\n\`\`\`
-
-        ${
-          gitHubIssueURL
-            ? `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${gitHubIssueURL})`
-            : ''
-        }
-        `.slice(0, MAX_EMBED_MESSAGE_DESCRIPTION_LENGTH)
-      );
-
-    return embedMessage;
+    return createEmbedMessage(
+      title,
+      errorStack,
+      gitHubIssueURL,
+      commandName,
+      user,
+      additionalInfo
+    );
   }
+  return buildTextErrorMessage(
+    title,
+    errorStack,
+    gitHubIssueURL,
+    commandName,
+    user,
+    additionalInfo
+  );
+}
 
+function buildTextErrorMessage(
+  title,
+  errorStack,
+  gitHubIssueURL,
+  commandName,
+  user,
+  additionalInfo
+) {
   let message = `**${title}**\n`;
   message += `**${translateLanguage('sendChannelError.commandLabel')}** ${commandName}\n`;
-
   if (user !== translateLanguage('sendChannelError.unknownUser')) {
     message += `**${translateLanguage('sendChannelError.userLabel')}** ${user}\n`;
   }
-
   if (additionalInfo.channel) {
     message += `**${translateLanguage('sendChannelError.channelLabel')}** ${additionalInfo.channel}\n`;
   }
-
   message += `**${translateLanguage('sendChannelError.errorLabel')}** \`\`\`js\n${errorStack}\n\`\`\``;
-
-  const issueUrl = getGitHubIssueURL(errorStack);
-
-  if (issueUrl) {
-    message += `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${issueUrl})`;
+  if (gitHubIssueURL) {
+    message += `\n🔗 **${translateLanguage('sendChannelError.reportIssue')}**: [${translateLanguage('sendChannelError.clickHere')}](${gitHubIssueURL})`;
   }
-
   return message;
 }
 
 async function sendErrorToChannel(source, error, additionalInfo = {}) {
-  let client, commandName, user, interaction;
+  try {
+    const { client, commandName, user, interaction } = extractSourceDetails(
+      source,
+      additionalInfo
+    );
+    const errorChannelID = process.env.ERROR_CHANNEL_ID;
+    const errorChannel = client.channels.cache.get(errorChannelID);
 
-  if (source && source.client && source.commandName) {
-    client = source.client;
-    commandName =
-      source.commandName ||
-      translateLanguage('sendChannelError.unknownCommand');
-    user = source.user
-      ? source.user.tag
-      : translateLanguage('sendChannelError.unknownUser');
-    interaction = source;
-  } else {
-    client = source;
-    commandName =
-      additionalInfo.command ||
-      translateLanguage('sendChannelError.unknownFunction');
-    user = translateLanguage('sendChannelError.unknownUser');
-  }
-
-  const errorChannelID = process.env.ERROR_CHANNEL_ID;
-  const errorChannel = client.channels.cache.get(errorChannelID);
-
-  if (!errorChannel || !errorChannel.isTextBased()) {
-    if (interaction && interaction.replied === false) {
-      try {
-        await interaction.reply({
-          content: translateLanguage('sendChannelError.channelNotFound'),
-          ephemeral: true,
-        });
-      } catch (err) {
-        console.error(
-          translateLanguage('sendChannelError.couldNotSendToUser \n'),
-          `Failed to find error channel with ID: ${errorChannelID}\n${err}`,
-          err
-        );
-      }
+    if (!errorChannel || !errorChannel.isTextBased()) {
+      await notifyUserInteraction(interaction, errorChannelID);
+      return;
     }
-    return;
+
+    const errorMessage = buildErrorMessage({
+      error,
+      commandName,
+      user,
+      additionalInfo,
+    });
+    await sendErrorMessage(errorChannel, errorMessage);
+
+    if (interaction && interaction.isRepliable()) {
+      await notifyUserFollowUp(interaction);
+    }
+  } catch (err) {
+    console.error('Failed to send error to channel:', err);
   }
+}
 
-  const errorMessage = buildErrorMessage({
-    error,
-    commandName,
-    user,
-    additionalInfo,
-  });
-
+async function sendErrorMessage(errorChannel, errorMessage) {
   try {
     await errorChannel.send(
-      errorMessage.data ? { embeds: [errorMessage] } : errorMessage
+      typeof errorMessage === 'string'
+        ? errorMessage
+        : { embeds: [errorMessage] }
     );
   } catch (err) {
-    console.error(translateLanguage('sendChannelError.couldNotSend'), err);
+    console.error('Error to send message', err);
   }
+}
 
-  if (interaction && interaction.isRepliable()) {
+function extractSourceDetails(source, additionalInfo) {
+  if (source && source.client && source.commandName) {
+    return {
+      client: source.client,
+      commandName:
+        source.commandName ||
+        translateLanguage('sendChannelError.unknownCommand'),
+      user: source.user
+        ? source.user.tag
+        : translateLanguage('sendChannelError.unknownUser'),
+      interaction: source,
+    };
+  }
+  return {
+    client: source,
+    commandName:
+      additionalInfo.command ||
+      translateLanguage('sendChannelError.unknownFunction'),
+    user: translateLanguage('sendChannelError.unknownUser'),
+    interaction: null,
+  };
+}
+
+async function notifyUserInteraction(interaction, errorChannelID) {
+  if (interaction && interaction.replied === false) {
     try {
-      await interaction.followUp({
-        content: translateLanguage('sendChannelError.userMessage'),
+      await interaction.reply({
+        content: translateLanguage('sendChannelError.channelNotFound'),
         ephemeral: true,
       });
     } catch (err) {
       console.error(
-        translateLanguage('sendChannelError.couldNotSendToUser'),
+        `Failed to find error channel with ID: ${errorChannelID}`,
         err
       );
     }
+  }
+}
+
+async function notifyUserFollowUp(interaction) {
+  try {
+    await interaction.followUp({
+      content: translateLanguage('sendChannelError.userMessage'),
+      ephemeral: true,
+    });
+  } catch (err) {
+    console.error('Error to notify user', err);
   }
 }
 
