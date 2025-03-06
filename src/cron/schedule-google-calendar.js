@@ -19,6 +19,36 @@ const clearAllCronJobs = () => {
   activeCronJobs = [];
 };
 
+const sendCalendarEventNotification = async (client, event) => {
+  const calendarChannel = await client.channels.cache.get(
+    FIREBASE_CONFIG.channelCalendarId
+  );
+
+  if (!calendarChannel) {
+    return console.log(
+      translateLanguage('calendarSchedules.errorChannelNotFound')
+    );
+  }
+
+  const embed = new EmbedBuilder()
+    .setColor('#0099ff')
+    .setTitle(translateLanguage('calendarSchedules.notificationMessage'))
+    .setDescription(`**${event.summary}**`)
+    .setFooter({
+      text: translateLanguage('calendarSchedules.appFooter'),
+    });
+
+  if (event?.hangoutLink) {
+    embed.addFields({
+      name: translateLanguage('calendarSchedules.meetingLinkLabel'),
+      value: `[${translateLanguage('calendarSchedules.clickHere')}](${event.hangoutLink})`,
+      inline: false,
+    });
+  }
+
+  calendarChannel.send({ embeds: [embed] });
+};
+
 /**
  * Schedules a notification to be sent when an event starts.
  *
@@ -48,32 +78,7 @@ const scheduleEventNotification = async ({ client, event }) => {
   const job = new CronJob(
     cronExpression,
     async () => {
-      const currentChannel = await client.channels.cache.get(
-        FIREBASE_CONFIG.channelCalendarId
-      );
-      const embed = new EmbedBuilder()
-        .setColor('#0099ff')
-        .setTitle(translateLanguage('calendarSchedules.notificationMessage'))
-        .setDescription(`**${event.summary}**`)
-        .setFooter({
-          text: translateLanguage('calendarSchedules.appFooter'),
-        });
-
-      if (event?.hangoutLink) {
-        embed.addFields({
-          name: translateLanguage('calendarSchedules.meetingLinkLabel'),
-          value: `[${translateLanguage('calendarSchedules.clickHere')}](${event.hangoutLink})`,
-          inline: false,
-        });
-      }
-
-      if (currentChannel) {
-        currentChannel.send({ embeds: [embed] });
-      } else {
-        console.log(
-          translateLanguage('calendarSchedules.errorChannelNotFound')
-        );
-      }
+      await sendCalendarEventNotification();
     },
     null,
     true,

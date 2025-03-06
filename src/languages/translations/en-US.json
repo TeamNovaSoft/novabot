@@ -43,7 +43,8 @@
     "notAThread": "Sorry, this is not a thread!",
     "message": "{{userId}} is asking for a point for **{{reason}}**. Check the message here: {{threadLink}}",
     "success": "Your request has been sent successfully.",
-    "error": "An error occurred while submitting your request. Please try again later."
+    "error": "An error occurred while submitting your request. Please try again later.",
+    "adminChannelNotFound": "The admin channel was not found."
   },
   "searchMyPoints": {
     "description": "Get the Discord search query to check points for a specific month",
@@ -82,7 +83,10 @@
     "drawNotSupported": "The draw is not supported.",
     "invalidResult": "The result was not valid or no points were awarded.",
     "notFindChannel": "Could not find the channel",
-    "errorOcurred": "An error occurred while processing the poll result."
+    "errorOcurred": "An error occurred while processing the poll result.",
+    "notFoundPollDescription": "Not found poll description",
+    "notFoundDescriptionParts": "Not found pointType or userId or both on poll description",
+    "notFinalResultFound": "Not final result found. Probably points in this poll not were awarded"
   },
   "calendarSchedules": {
     "errorMissingParameters": "Error: Missing one or more required parameters (client, event, event.start.dateTime, or timeZone).",
@@ -101,7 +105,8 @@
     "saturday": "Saturday",
     "sunday": "Sunday",
     "calendarEventCollector": "Calendar event collector scheduled to run from {{readableDays}}, {{hoursRange}} every {{eachMinute}} minutes (Colombia time).",
-    "reminderDiscordEvent": "Reminder: The event \"{{eventName}}\" is about to end soon. Join or wrap up your activities if you want to participate!"
+    "reminderDiscordEvent": "Reminder: The event \"{{eventName}}\" is about to end soon. Join or wrap up your activities if you want to participate!",
+    "eventAlreadyEndedError": "The event has ended, the reminder has expired."
   },
   "messageSchedules": {
     "errorMissingParameters": "Error: Missing one or more required parameters (client, channel, message, datetime, or timeZone).",
