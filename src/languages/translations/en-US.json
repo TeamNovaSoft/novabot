@@ -43,7 +43,8 @@
     "notAThread": "Sorry, this is not a thread!",
     "message": "{{userId}} is asking for a point for **{{reason}}**. Check the message here: {{threadLink}}",
     "success": "Your request has been sent successfully.",
-    "error": "An error occurred while submitting your request. Please try again later."
+    "error": "An error occurred while submitting your request. Please try again later.",
+    "adminChannelNotFound": "The admin channel was not found."
   },
   "searchMyPoints": {
     "description": "Get the Discord search query to check points for a specific month",

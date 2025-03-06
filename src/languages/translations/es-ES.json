@@ -44,7 +44,8 @@
     "notAThread": "¡Lo siento, esto no es un hilo!",
     "message": "{{userId}} está solicitando un punto por **{{reason}}**. Revisa el mensaje aquí: {{threadLink}}",
     "success": "Tu solicitud ha sido enviada exitosamente.",
-    "error": "Ocurrió un error al enviar tu solicitud. Por favor, inténtalo nuevamente más tarde."
+    "error": "Ocurrió un error al enviar tu solicitud. Por favor, inténtalo nuevamente más tarde.",
+    "adminChannelNotFound": "No se pudo encontrar el canal de administración."
   },
   "searchMyPoints": {
     "description": "Obtener la consulta de búsqueda de Discord para verificar puntos en un mes específico",
