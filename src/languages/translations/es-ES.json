@@ -83,7 +83,10 @@
     "drawNotSupported": "El empate no está soportado.",
     "invalidResult": "El resultado no fue válido o no se otorgaron puntos.",
     "notFindChannel": "No se pudo encontrar el canal.",
-    "errorOcurred": "Ocurrió un error al procesar el resultado de la votación."
+    "errorOcurred": "Ocurrió un error al procesar el resultado de la votación.",
+    "notFoundPollDescription": "Descripción de la encuesta No encontrada",
+    "notFoundDescriptionParts": "No se encontró pointType o userId, o ambos, en la descripción de la votación",
+    "notFinalResultFound": "No se ha encontrado el resultado final. Probablemente no se otorgaron puntos en esta encuesta"
   },
   "calendarSchedules": {
     "errorMissingParameters": "Error: Faltan uno o más parámetros requeridos (cliente, evento, event.start.dateTime o timeZone).",
