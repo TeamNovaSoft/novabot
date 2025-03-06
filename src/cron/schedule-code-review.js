@@ -32,7 +32,7 @@ const getMappedStatusText = (key) => {
  * @param {string} statusText - Text to search in thread names.
  * @param {object} statusConfig - Configuration object.
  */
-const processChannelThreads = async (channel, statusText, statusConfig) => {
+const matchedThreads = async (channel, statusText, statusConfig) => {
   try {
     const threads = await channel.threads.fetchActive();
     const pendingThreads = threads.threads.filter((thread) =>
@@ -90,7 +90,7 @@ const checkThreadsForStatus = async (client, statusText, statusConfig) => {
       return;
     }
     for (const channel of textChannels.values()) {
-      await processChannelThreads(channel, statusText, statusConfig);
+      await matchedThreads(channel, statusText, statusConfig);
     }
   } catch (error) {
     saveErrorLog(error);

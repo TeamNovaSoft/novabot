@@ -2,16 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const { REQUEST_POINT } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { sendErrorToChannel } = require('../../utils/send-error');
-
-function buildRequestMessage({ user, userMessage, guild, channel }) {
-  const escapedUserId = `<@${user.id}>`;
-  const threadLink = `https://discord.com/channels/${guild.id}/${channel.id}`;
-  return translateLanguage('requestPoint.message', {
-    userId: escapedUserId,
-    reason: userMessage,
-    threadLink,
-  });
-}
+const { buildRequestMessage } = require('../../utils/requestPoint-functions');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -54,9 +45,13 @@ module.exports = {
       const adminChannel = await interaction.client.channels.fetch(
         REQUEST_POINT.discordAdminPointRequestChannel
       );
-      if (adminChannel) {
-        await adminChannel.send(message);
+      if (!adminChannel) {
+        return await interaction.reply({
+          content: translateLanguage('requestPoint.adminChannelNotFound'),
+          ephemeral: true,
+        });
       }
+      await adminChannel.send(message);
       await interaction.reply({
         content: translateLanguage('requestPoint.success'),
         ephemeral: true,

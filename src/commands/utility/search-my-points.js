@@ -87,7 +87,7 @@ module.exports = {
         ? channelsInput.split(',').map((channel) => channel.trim())
         : [];
       const channelQueryParts = channels.length
-        ? channels.map((ch) => `in:${ch}`).join(' ')
+        ? channels.map((channel) => `in:${channel}`).join(' ')
         : '';
 
       const { startDateStr, endDateStr } = buildDateStrings(year, month);
