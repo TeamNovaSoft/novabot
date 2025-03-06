@@ -104,7 +104,8 @@
     "saturday": "Saturday",
     "sunday": "Sunday",
     "calendarEventCollector": "Calendar event collector scheduled to run from {{readableDays}}, {{hoursRange}} every {{eachMinute}} minutes (Colombia time).",
-    "reminderDiscordEvent": "Reminder: The event \"{{eventName}}\" is about to end soon. Join or wrap up your activities if you want to participate!"
+    "reminderDiscordEvent": "Reminder: The event \"{{eventName}}\" is about to end soon. Join or wrap up your activities if you want to participate!",
+    "eventAlreadyEndedError": "The event has ended, the reminder has expired."
   },
   "messageSchedules": {
     "errorMissingParameters": "Error: Missing one or more required parameters (client, channel, message, datetime, or timeZone).",
