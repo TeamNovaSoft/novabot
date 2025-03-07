@@ -295,9 +295,9 @@ This example schedules a message saying "Good morning!" to be sent to the specif
 <!-- CONTRIBUTORS START -->
 ## Contribuyentes
 
-- [YoelFerreyra](https://github.com/YoelFerreyra) - 168 contribuciones
-- [ARenzDev](https://github.com/ARenzDev) - 157 contribuciones
-- [heliomar-pena](https://github.com/heliomar-pena) - 108 contribuciones
-- [joset98](https://github.com/joset98) - 70 contribuciones
-- [Israel-Laguan](https://github.com/Israel-Laguan) - 1 contribuciones
+- ![Avatar](https://avatars.githubusercontent.com/u/89047058?v=4) [YoelFerreyra](https://github.com/YoelFerreyra) - 168 contribuciones
+- ![Avatar](https://avatars.githubusercontent.com/u/52115726?v=4) [ARenzDev](https://github.com/ARenzDev) - 157 contribuciones
+- ![Avatar](https://avatars.githubusercontent.com/u/66505715?v=4) [heliomar-pena](https://github.com/heliomar-pena) - 108 contribuciones
+- ![Avatar](https://avatars.githubusercontent.com/u/49282275?v=4) [joset98](https://github.com/joset98) - 70 contribuciones
+- ![Avatar](https://avatars.githubusercontent.com/u/36519478?v=4) [Israel-Laguan](https://github.com/Israel-Laguan) - 1 contribuciones
 <!-- CONTRIBUTORS END -->
