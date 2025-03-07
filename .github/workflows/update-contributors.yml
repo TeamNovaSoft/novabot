@@ -46,12 +46,12 @@ jobs:
           with open("contributors.json", "r", encoding="utf-8") as f:
               contributors = json.load(f)
 
-          # 2. Construir la sección en formato Markdown con la foto de cada contribuyente
+          # 2. Construir la sección en formato Markdown usando HTML para las imágenes
           md_lines = ["## Contribuyentes", ""]
           for contributor in contributors:
               md_lines.append(
-                  f"- ![Avatar]({contributor['avatar_url']}) "
-                  f"[{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones"
+                  f"- <img src='{contributor['avatar_url']}' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> "
+                  f"<a href='{contributor['html_url']}'>{contributor['login']}</a> - {contributor['contributions']} contribuciones"
               )
           new_section = "\n".join(md_lines)
 
