@@ -47,17 +47,32 @@ jobs:
               contributors = json.load(f)
 
           # 2. Construir la sección en formato Markdown usando HTML para las imágenes
+          html_lines = [
+            "<h2>Contribuyentes</h2>",
+            "<table border='1' cellspacing='0' cellpadding='5'>",
+            "  <thead>",
+            "    <tr>",
+            "      <th>Avatar</th>",
+            "      <th>Usuario</th>",
+            "      <th>Contribuciones</th>",
+            "    </tr>",
+            "  </thead>",
+            "  <tbody>"
+          ]
           md_lines = ["## Contribuyentes", ""]
           for contributor in contributors:
-            block = (
-              f"<div align=\"left\" style=\"display:inline-block; margin:10px;\">\n"
-              f"  <img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"><br>\n"
-              f"  <a href=\"{contributor['html_url']}\">{contributor['login']}</a><br>\n"
-              f"  {contributor['contributions']} contribuciones\n"
-              f"</div>\n"
-          )
-            md_lines.append(block)
-          new_section = "\n".join(md_lines)
+            row = (
+              f"    <tr>"
+              f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
+              f"<td><a href=\"{contributor['html_url']}\">{contributor['login']}</a></td>"
+              f"<td>{contributor['contributions']} contribuciones</td>"
+              f"</tr>"
+            )
+            html_lines.append(row)
+
+          html_lines.append("  </tbody>")
+          html_lines.append("</table>")
+          new_section = "\n".join(html_lines)
 
           # 3. Leer contenido actual del readme
           if os.path.exists(readme_filename):
