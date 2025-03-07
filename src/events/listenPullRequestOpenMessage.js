@@ -3,6 +3,11 @@ const { translateLanguage } = require('../languages');
 const { formatPRMessage } = require('../utils/pr-formatter');
 const { DISCORD_SERVER } = require('../config');
 
+const headers = {
+  Authorization: `token ${DISCORD_SERVER.githubOrganizationPAT}`,
+  'Content-Type': 'application/json',
+};
+
 function capitalizeText(text) {
   if (!text) {
     return '';
@@ -26,8 +31,33 @@ function cleanStringArray(arr) {
   return arr.filter((str) => str.trim() !== '');
 }
 
+function extractDataFromPRGitHubUrl(githubURL) {
+  if (!githubURL) {
+    return githubURL;
+  }
+
+  const urlParts = githubURL.split('/');
+  return { repository: urlParts[4], pullNumber: urlParts[6] };
+}
+
 function isPullRequestOpen(prTitle = '') {
   return prTitle.toLowerCase().includes('pull request opened');
+}
+
+async function fetchPullRequest(pullRequestMetadata) {
+  const owner = pullRequestMetadata.author.name;
+  const { repository: repo, pullNumber } = extractDataFromPRGitHubUrl(
+    pullRequestMetadata.url
+  );
+  const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}`;
+  const response = await fetch(url, { headers });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
 }
 
 function extractPRMetadata(description = '') {
@@ -76,6 +106,21 @@ function generateOverview(prRestMetadata) {
   return prOverview;
 }
 
+function formatPullRequestMessage(pullData, prMessageMeta) {
+  const pullRequestTitle = pullData.title;
+  const pullRequestDescriptionMetadata = extractPRMetadata(pullData.body);
+  const { howToTest, ...prRestMetadata } = pullRequestDescriptionMetadata;
+  const prOverview = generateOverview(prRestMetadata);
+
+  return formatPRMessage({
+    prUrl: prMessageMeta.url,
+    requester: prMessageMeta?.author?.name,
+    title: pullRequestTitle,
+    howToTest: howToTest?.description || '',
+    overview: prOverview,
+  });
+}
+
 async function handleError(error, message) {
   console.error('Error processing the PR:', error);
 
@@ -98,29 +143,23 @@ module.exports = {
         return;
       }
 
-      const pullRequestData = message?.embeds[0]?.data;
+      const pullRequestMeta = message?.embeds[0]?.data;
 
       if (
         !message.webhookId ||
         !message.author.username.toLowerCase().includes('git') ||
-        !isPullRequestOpen(pullRequestData.title)
+        !isPullRequestOpen(pullRequestMeta.title)
       ) {
         return;
       }
 
-      const pullRequestTitle = pullRequestData.title.split(':')[1].trim();
-      const pullRequestDescriptionMetadata = extractPRMetadata(
-        message.embeds[0].data.description
+      const pullData = await fetchPullRequest(pullRequestMeta);
+
+      const formattedMessage = formatPullRequestMessage(
+        pullData,
+        pullRequestMeta
       );
-      const { howToTest, ...prRestMetadata } = pullRequestDescriptionMetadata;
-      const prOverview = generateOverview(prRestMetadata);
-      const formattedMessage = formatPRMessage({
-        prUrl: pullRequestData.url,
-        requester: pullRequestData?.author?.name,
-        title: pullRequestTitle,
-        howToTest: howToTest?.description || '',
-        overview: prOverview,
-      });
+
       const channel = await client.channels.fetch(
         DISCORD_SERVER.githubPRReviewChannel
       );

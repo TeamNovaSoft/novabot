@@ -11,6 +11,7 @@ const DISCORD_SERVER = {
   scheduledDiscordEventsEnabled:
     process.env.SCHEDULED_DISCORD_EVENTS_ENABLED === 'true',
   githubPRReviewChannel: process.env.GITHUB_PR_REVIEW_CHANNEL,
+  githubOrganizationPAT: process.env.GITHUB_ACCESS_TOKEN,
 };
 
 const LISTEN_NEW_EVENTS = {
