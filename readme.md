@@ -293,36 +293,21 @@ Good morning!
 This example schedules a message saying "Good morning!" to be sent to the specified channel every weekday (Monday to Friday) at 8:00 AM in the America/Bogota time zone.
 
 <!-- CONTRIBUTORS START -->
-## Contribuyentes
-
-<div align="left" style="display:inline-block; margin:10px;">
-  <img src="https://avatars.githubusercontent.com/u/89047058?v=4?s=50" alt="Avatar" width="50" height="50"><br>
-  <a href="https://github.com/YoelFerreyra">YoelFerreyra</a><br>
-  168 contribuciones
-</div>
-
-<div align="left" style="display:inline-block; margin:10px;">
-  <img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"><br>
-  <a href="https://github.com/ARenzDev">ARenzDev</a><br>
-  157 contribuciones
-</div>
-
-<div align="left" style="display:inline-block; margin:10px;">
-  <img src="https://avatars.githubusercontent.com/u/66505715?v=4?s=50" alt="Avatar" width="50" height="50"><br>
-  <a href="https://github.com/heliomar-pena">heliomar-pena</a><br>
-  108 contribuciones
-</div>
-
-<div align="left" style="display:inline-block; margin:10px;">
-  <img src="https://avatars.githubusercontent.com/u/49282275?v=4?s=50" alt="Avatar" width="50" height="50"><br>
-  <a href="https://github.com/joset98">joset98</a><br>
-  70 contribuciones
-</div>
-
-<div align="left" style="display:inline-block; margin:10px;">
-  <img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"><br>
-  <a href="https://github.com/Israel-Laguan">Israel-Laguan</a><br>
-  1 contribuciones
-</div>
-
+<h2>Contribuyentes</h2>
+<table border='1' cellspacing='0' cellpadding='5'>
+  <thead>
+    <tr>
+      <th>Avatar</th>
+      <th>Usuario</th>
+      <th>Contribuciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/89047058?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/YoelFerreyra">YoelFerreyra</a></td><td>168 contribuciones</td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ARenzDev">ARenzDev</a></td><td>157 contribuciones</td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/66505715?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/heliomar-pena">heliomar-pena</a></td><td>108 contribuciones</td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/49282275?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/joset98">joset98</a></td><td>70 contribuciones</td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td>1 contribuciones</td></tr>
+  </tbody>
+</table>
 <!-- CONTRIBUTORS END -->
