@@ -1,0 +1,85 @@
+name: Update Contributors
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+      - main
+
+jobs:
+  update-contributors:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Obtener lista de contribuyentes
+        run: |
+          echo "Consultando la API de GitHub para obtener los contribuyentes..."
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -s https://api.github.com/repos/${{ github.repository }}/contributors \
+               > contributors.json
+
+      - name: Actualizar README.md sin borrar contenido existente
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+
+          readme_filename = "README.md"
+          start_marker = "<!-- CONTRIBUTORS START -->"
+          end_marker = "<!-- CONTRIBUTORS END -->"
+
+          # Cargar la lista de contribuyentes obtenida de la API
+          with open("contributors.json", "r", encoding="utf-8") as f:
+              contributors = json.load(f)
+
+          # Construir el contenido markdown de la sección de contribuyentes
+          md_lines = ["## Contribuyentes", ""]
+          for contributor in contributors:
+              # Se agrega el nombre de usuario, enlace al perfil y cantidad de contribuciones
+              md_lines.append(f"- [{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones")
+          new_section = "\n".join(md_lines)
+
+          # Leer el contenido existente del README
+          if os.path.exists(readme_filename):
+              with open(readme_filename, "r", encoding="utf-8") as f:
+                  content = f.read()
+          else:
+              content = ""
+
+          # Si ya existe la sección de contribuyentes, se reemplaza únicamente el contenido entre los marcadores
+          if start_marker in content and end_marker in content:
+              before = content.split(start_marker)[0]
+              after = content.split(end_marker)[-1]
+              updated_content = before + start_marker + "\n" + new_section + "\n" + end_marker + after
+          else:
+              # Si no existen los marcadores, se agregan al final sin borrar el contenido existente
+              updated_content = content.rstrip() + "\n\n" + start_marker + "\n" + new_section + "\n" + end_marker + "\n"
+
+          # Guardar el README actualizado
+          with open(readme_filename, "w", encoding="utf-8") as f:
+              f.write(updated_content)
+          print("README.md actualizado sin borrar el contenido existente.")
+          EOF
+
+      - name: Configurar Git y commitear cambios
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Actualizar lista de contribuyentes en README.md"
+            git push
+          else
+            echo "No hay cambios para commitear."
+          fi
