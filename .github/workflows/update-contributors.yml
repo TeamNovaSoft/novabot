@@ -49,10 +49,14 @@ jobs:
           # 2. Construir la sección en formato Markdown usando HTML para las imágenes
           md_lines = ["## Contribuyentes", ""]
           for contributor in contributors:
-              md_lines.append(
-                  f"- <img src='{contributor['avatar_url']}' alt='Avatar' width='50' height='50' style='vertical-align:middle;'> "
-                  f"<a href='{contributor['html_url']}'>{contributor['login']}</a> - {contributor['contributions']} contribuciones"
-              )
+            block = (
+              f"<div align=\"center\" style=\"display:inline-block; margin:10px;\">\n"
+              f"  <img src=\"{contributor['avatar_url']}?s=30\" alt=\"Avatar\"><br>\n"
+              f"  <a href=\"{contributor['html_url']}\">{contributor['login']}</a><br>\n"
+              f"  {contributor['contributions']} contribuciones\n"
+              f"</div>\n"
+          )
+            md_lines.append(block)
           new_section = "\n".join(md_lines)
 
           # 3. Leer contenido actual del readme
