@@ -55,7 +55,7 @@ jobs:
           else:
               content = ""
 
-          # Actualizar la sección si ya existe; de lo contrario, agregarla al final
+          # Actualizar la sección si ya existe; de lo contrario, agregarla al finall
           if start_marker in content and end_marker in content:
               before = content.split(start_marker)[0]
               after = content.split(end_marker)[-1]
