@@ -1,0 +1,103 @@
+name: Update Contributors
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+      - main
+
+jobs:
+  update-contributors:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Obtener lista de contribuyentes
+        run: |
+          echo "Consultando la API de GitHub para obtener los contribuyentes..."
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -s https://api.github.com/repos/${{ github.repository }}/contributors \
+               > contributors.json
+
+      - name: Actualizar README.md sin borrar contenido
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+
+          readme_filename = "README.md"
+          start_marker = "<!-- CONTRIBUTORS START -->"
+          end_marker = "<!-- CONTRIBUTORS END -->"
+
+          # 1. Leer la lista de contribuyentes
+          with open("contributors.json", "r", encoding="utf-8") as f:
+              contributors = json.load(f)
+
+          # 2. Construir la sección en formato Markdown
+          md_lines = ["## Contribuyentes", ""]
+          for contributor in contributors:
+              md_lines.append(f"- [{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones")
+          new_section = "\n".join(md_lines)
+
+          # 3. Leer contenido actual del README
+          if os.path.exists(readme_filename):
+              with open(readme_filename, "r", encoding="utf-8") as f:
+                  content = f.read()
+          else:
+              content = ""
+
+          # 4. Insertar o reemplazar la sección
+          if start_marker in content and end_marker in content:
+              # Reemplaza lo que esté entre los marcadores
+              before_start, _, remainder = content.partition(start_marker)
+              _, _, after_end = remainder.partition(end_marker)
+
+              updated_content = (
+                  before_start
+                  + start_marker
+                  + "\n"
+                  + new_section
+                  + "\n"
+                  + end_marker
+                  + after_end
+              )
+          else:
+              # Si no existen marcadores, se añade al final
+              updated_content = (
+                  content.rstrip()
+                  + "\n\n"
+                  + start_marker
+                  + "\n"
+                  + new_section
+                  + "\n"
+                  + end_marker
+                  + "\n"
+              )
+
+          # 5. Guardar el contenido actualizado
+          with open(readme_filename, "w", encoding="utf-8") as f:
+              f.write(updated_content)
+          print("README.md actualizado sin borrar el contenido.")
+          EOF
+
+      - name: Commit y push de cambios
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Actualizar lista de contribuyentes en README.md"
+            git push
+          else
+            echo "No hay cambios para commitear."
+          fi

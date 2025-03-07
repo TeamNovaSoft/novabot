@@ -291,3 +291,6 @@ Good morning!
 ```
 
 This example schedules a message saying "Good morning!" to be sent to the specified channel every weekday (Monday to Friday) at 8:00 AM in the America/Bogota time zone.
+
+<!-- CONTRIBUTORS START -->
+<!-- CONTRIBUTORS END -->
