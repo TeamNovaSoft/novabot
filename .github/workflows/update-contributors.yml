@@ -51,7 +51,7 @@ jobs:
           for contributor in contributors:
             block = (
               f"<div align=\"center\" style=\"display:inline-block; margin:10px;\">\n"
-              f"  <img src=\"{contributor['avatar_url']}?s=30\" alt=\"Avatar\"><br>\n"
+              f"  <img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"><br>\n"
               f"  <a href=\"{contributor['html_url']}\">{contributor['login']}</a><br>\n"
               f"  {contributor['contributions']} contribuciones\n"
               f"</div>\n"
