@@ -295,9 +295,34 @@ This example schedules a message saying "Good morning!" to be sent to the specif
 <!-- CONTRIBUTORS START -->
 ## Contribuyentes
 
-- <img src='https://avatars.githubusercontent.com/u/89047058?v=4' alt='Avatar' width='50' height='50' style='vertical-align:middle;'> <a href='https://github.com/YoelFerreyra'>YoelFerreyra</a> - 168 contribuciones
-- <img src='https://avatars.githubusercontent.com/u/52115726?v=4' alt='Avatar' width='50' height='50' style='vertical-align:middle;'> <a href='https://github.com/ARenzDev'>ARenzDev</a> - 157 contribuciones
-- <img src='https://avatars.githubusercontent.com/u/66505715?v=4' alt='Avatar' width='50' height='50' style='vertical-align:middle;'> <a href='https://github.com/heliomar-pena'>heliomar-pena</a> - 108 contribuciones
-- <img src='https://avatars.githubusercontent.com/u/49282275?v=4' alt='Avatar' width='50' height='50' style='vertical-align:middle;'> <a href='https://github.com/joset98'>joset98</a> - 70 contribuciones
-- <img src='https://avatars.githubusercontent.com/u/36519478?v=4' alt='Avatar' width='50' height='50' style='vertical-align:middle;'> <a href='https://github.com/Israel-Laguan'>Israel-Laguan</a> - 1 contribuciones
+<div align="center" style="display:inline-block; margin:10px;">
+  <img src="https://avatars.githubusercontent.com/u/89047058?v=4?s=30" alt="Avatar"><br>
+  <a href="https://github.com/YoelFerreyra">YoelFerreyra</a><br>
+  168 contribuciones
+</div>
+
+<div align="center" style="display:inline-block; margin:10px;">
+  <img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=30" alt="Avatar"><br>
+  <a href="https://github.com/ARenzDev">ARenzDev</a><br>
+  157 contribuciones
+</div>
+
+<div align="center" style="display:inline-block; margin:10px;">
+  <img src="https://avatars.githubusercontent.com/u/66505715?v=4?s=30" alt="Avatar"><br>
+  <a href="https://github.com/heliomar-pena">heliomar-pena</a><br>
+  108 contribuciones
+</div>
+
+<div align="center" style="display:inline-block; margin:10px;">
+  <img src="https://avatars.githubusercontent.com/u/49282275?v=4?s=30" alt="Avatar"><br>
+  <a href="https://github.com/joset98">joset98</a><br>
+  70 contribuciones
+</div>
+
+<div align="center" style="display:inline-block; margin:10px;">
+  <img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=30" alt="Avatar"><br>
+  <a href="https://github.com/Israel-Laguan">Israel-Laguan</a><br>
+  1 contribuciones
+</div>
+
 <!-- CONTRIBUTORS END -->
