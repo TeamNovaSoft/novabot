@@ -50,8 +50,8 @@ jobs:
           md_lines = ["## Contribuyentes", ""]
           for contributor in contributors:
               md_lines.append(
-                  f"- <img src='{contributor['avatar_url']}' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> "
-                  f"<a href='{contributor['html_url']}'>{contributor['login']}</a> - {contributor['contributions']} contribuciones"
+                  f"- ![Avatar]({contributor['avatar_url']}){{: width=30 height=30 style=\"vertical-align:middle;\"}} "
+                  f"[{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones"
               )
           new_section = "\n".join(md_lines)
 
