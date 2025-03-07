@@ -46,10 +46,13 @@ jobs:
           with open("contributors.json", "r", encoding="utf-8") as f:
               contributors = json.load(f)
 
-          # 2. Construir la sección en formato Markdown
+          # 2. Construir la sección en formato Markdown con la foto de cada contribuyente
           md_lines = ["## Contribuyentes", ""]
           for contributor in contributors:
-              md_lines.append(f"- [{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones")
+              md_lines.append(
+                  f"- ![Avatar]({contributor['avatar_url']}) "
+                  f"[{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones"
+              )
           new_section = "\n".join(md_lines)
 
           # 3. Leer contenido actual del readme
