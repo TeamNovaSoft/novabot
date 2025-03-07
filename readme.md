@@ -295,9 +295,9 @@ This example schedules a message saying "Good morning!" to be sent to the specif
 <!-- CONTRIBUTORS START -->
 ## Contribuyentes
 
-- ![Avatar](https://avatars.githubusercontent.com/u/89047058?v=4) [YoelFerreyra](https://github.com/YoelFerreyra) - 168 contribuciones
-- ![Avatar](https://avatars.githubusercontent.com/u/52115726?v=4) [ARenzDev](https://github.com/ARenzDev) - 157 contribuciones
-- ![Avatar](https://avatars.githubusercontent.com/u/66505715?v=4) [heliomar-pena](https://github.com/heliomar-pena) - 108 contribuciones
-- ![Avatar](https://avatars.githubusercontent.com/u/49282275?v=4) [joset98](https://github.com/joset98) - 70 contribuciones
-- ![Avatar](https://avatars.githubusercontent.com/u/36519478?v=4) [Israel-Laguan](https://github.com/Israel-Laguan) - 1 contribuciones
+- <img src='https://avatars.githubusercontent.com/u/89047058?v=4' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> <a href='https://github.com/YoelFerreyra'>YoelFerreyra</a> - 168 contribuciones
+- <img src='https://avatars.githubusercontent.com/u/52115726?v=4' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> <a href='https://github.com/ARenzDev'>ARenzDev</a> - 157 contribuciones
+- <img src='https://avatars.githubusercontent.com/u/66505715?v=4' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> <a href='https://github.com/heliomar-pena'>heliomar-pena</a> - 108 contribuciones
+- <img src='https://avatars.githubusercontent.com/u/49282275?v=4' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> <a href='https://github.com/joset98'>joset98</a> - 70 contribuciones
+- <img src='https://avatars.githubusercontent.com/u/36519478?v=4' alt='Avatar' width='30' height='30' style='border-radius:50%; vertical-align:middle;'> <a href='https://github.com/Israel-Laguan'>Israel-Laguan</a> - 1 contribuciones
 <!-- CONTRIBUTORS END -->
