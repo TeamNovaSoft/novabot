@@ -35,18 +35,20 @@ jobs:
           import json
           import os
 
+          # Archivo README
           readme_filename = "README.md"
-          start_marker = "<!-- CONTRIBUTORS START -->"
-          end_marker = "<!-- CONTRIBUTORS END -->"
+          # Marcadores para la sección auto-generada (no incluyas contenido manual entre estos)
+          start_marker = "<!-- AUTO CONTRIBUTORS START -->"
+          end_marker = "<!-- AUTO CONTRIBUTORS END -->"
 
           # Cargar la lista de contribuyentes obtenida de la API
           with open("contributors.json", "r", encoding="utf-8") as f:
               contributors = json.load(f)
 
-          # Construir el contenido markdown
-          md_lines = ["## Contribuyentes", ""]
+          # Construir el contenido markdown auto-generado
+          md_lines = ["## Contribuyentes (Actualizado automáticamente)", ""]
           for contributor in contributors:
-              # Se agrega el nombre de usuario, enlace al perfil y cantidad de contribuciones
+              # Incluye el nombre del usuario (enlace) y el número de contribuciones
               md_lines.append(f"- [{contributor['login']}]({contributor['html_url']}) - {contributor['contributions']} contribuciones")
           new_section = "\n".join(md_lines)
 
@@ -57,7 +59,8 @@ jobs:
           else:
               content = ""
 
-          # Si ya existe la sección de contribuyentes, se reemplaza; de lo contrario se agrega al final
+          # Si ya existen los marcadores, actualiza la sección entre ellos.
+          # De lo contrario, añade la sección al final del README sin borrar el resto del contenido.
           if start_marker in content and end_marker in content:
               before = content.split(start_marker)[0]
               after = content.split(end_marker)[-1]
