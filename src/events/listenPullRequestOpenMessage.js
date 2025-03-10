@@ -132,7 +132,8 @@ async function handleError(error, message) {
 
   if (!message.reply) {
     saveErrorLog({
-      message: 'Could not send the reply due to an error in message.reply.',
+      message:
+        'Could not send the reply due to an error in listenPullRequestOpenMessage',
     });
   }
   await message.reply({
