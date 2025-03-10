@@ -35,9 +35,14 @@ function extractDataFromPRGitHubUrl(githubURL) {
   if (!githubURL) {
     return githubURL;
   }
-
   const urlParts = githubURL.split('/');
-  return { repository: urlParts[4], pullNumber: urlParts[6] };
+  const pullNumberPartIndex = urlParts.length - 1;
+  const repositoryPartIndex = pullNumberPartIndex - 2;
+
+  return {
+    repository: urlParts[repositoryPartIndex],
+    pullNumber: urlParts[pullNumberPartIndex],
+  };
 }
 
 function isPullRequestOpen(prTitle = '') {
