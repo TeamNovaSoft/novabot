@@ -1,9 +1,6 @@
 name: Update Contributors
 
 on:
-  push:
-    branches:
-      - '**'
   workflow_dispatch:
   pull_request:
     types: [closed]
@@ -13,7 +10,7 @@ on:
 
 jobs:
   update-contributors:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
 
     steps:
@@ -22,97 +19,92 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List files
-        run: ls -la
+      - name: Get PR author
+        if: github.event_name == 'pull_request'
+        run: echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
 
-      - name: Get list of contributors
+      - name: Fetch list of contributors
         run: |
-          echo "Querying GitHub API to get contributors..."
+          echo "Fetching contributors from GitHub API..."
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -s https://api.github.com/repos/${{ github.repository }}/contributors \
                > contributors.json
 
-      - name: Update readme.md without deleting content
+      - name: Update readme.md with contributors
         run: |
           python3 << 'EOF'
           import json
           import os
+          import sys
 
           readme_filename = "readme.md"
           start_marker = "<!-- CONTRIBUTORS START -->"
           end_marker = "<!-- CONTRIBUTORS END -->"
 
-          # 1. Read the list of contributors
-          with open("contributors.json", "r", encoding="utf-8") as f:
-              contributors = json.load(f)
+          try:
+              # Get the PR author
+              pr_author = os.getenv("PR_AUTHOR", "").strip()
 
-          # 2. Build the section in Markdown format using HTML for images
-          html_lines = [
-            "<h2>Contributors</h2>",
-            "<table border='1' cellspacing='0' cellpadding='5'>",
-            "  <thead>",
-            "    <tr>",
-            "      <th>Avatar</th>",
-            "      <th>Username</th>",
-            "      <th>Contributions</th>",
-            "    </tr>",
-            "  </thead>",
-            "  <tbody>"
-          ]
-          md_lines = ["## Contributors", ""]
-          for contributor in contributors:
-            row = (
-              f"    <tr>"
-              f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
-              f"<td><a href=\"{contributor['html_url']}\">{contributor['login']}</a></td>"
-              f"<td>{contributor['contributions']} contributions</td>"
-              f"</tr>"
-            )
-            html_lines.append(row)
+              # Read the list of contributors
+              with open("contributors.json", "r", encoding="utf-8") as f:
+                  contributors = json.load(f)
 
-          html_lines.append("  </tbody>")
-          html_lines.append("</table>")
-          new_section = "\n".join(html_lines)
+              # Read the current readme.md content
+              if os.path.exists(readme_filename):
+                  with open(readme_filename, "r", encoding="utf-8") as f:
+                      content = f.read()
+              else:
+                  content = ""
 
-          # 3. Read current readme content
-          if os.path.exists(readme_filename):
-              with open(readme_filename, "r", encoding="utf-8") as f:
-                  content = f.read()
-          else:
-              content = ""
+              # Check if the PR author is already in readme.md
+              if pr_author and pr_author in content:
+                  print(f"User {pr_author} is already in readme.md. No changes made.")
+                  sys.exit(0)  # Exit without changes
 
-          # 4. Insert or replace the section
-          if start_marker in content and end_marker in content:
-              # Replace what is between the markers
-              before_start, _, remainder = content.partition(start_marker)
-              _, _, after_end = remainder.partition(end_marker)
+              # Build the contributors table
+              html_lines = [
+                  "<h2>Contributors</h2>",
+                  "<table border='1' cellspacing='0' cellpadding='5'>",
+                  "  <thead>",
+                  "    <tr><th>Avatar</th><th>Username</th><th>Contributions</th></tr>",
+                  "  </thead>",
+                  "  <tbody>"
+              ]
 
-              updated_content = (
-                  before_start
-                  + start_marker
-                  + "\n"
-                  + new_section
-                  + "\n"
-                  + end_marker
-                  + after_end
-              )
-          else:
-              # If markers do not exist, add at the end
-              updated_content = (
-                  content.rstrip()
-                  + "\n\n"
-                  + start_marker
-                  + "\n"
-                  + new_section
-                  + "\n"
-                  + end_marker
-                  + "\n"
-              )
+              for contributor in contributors:
+                  if contributor["login"] == pr_author:
+                      continue  # Skip the PR author
 
-          # 5. Save the updated content
-          with open(readme_filename, "w", encoding="utf-8") as f:
-              f.write(updated_content)
-          print("readme.md updated without deleting content.")
+                  row = (
+                      f"    <tr>"
+                      f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
+                      f"<td><a href=\"{contributor['html_url']}\">{contributor['login']}</a></td>"
+                      f"<td>{contributor['contributions']} contributions</td>"
+                      f"</tr>"
+                  )
+                  html_lines.append(row)
+
+              html_lines.append("  </tbody>")
+              html_lines.append("</table>")
+              new_section = "\n".join(html_lines)
+
+              # Replace or insert the section in readme.md
+              if start_marker in content and end_marker in content:
+                  before_start, _, remainder = content.partition(start_marker)
+                  _, _, after_end = remainder.partition(end_marker)
+                  updated_content = f"{before_start}{start_marker}\n{new_section}\n{end_marker}{after_end}"
+              else:
+                  updated_content = f"{content.rstrip()}\n\n{start_marker}\n{new_section}\n{end_marker}\n"
+
+              # Save changes
+              with open(readme_filename, "w", encoding="utf-8") as f:
+                  f.write(updated_content)
+
+              print("readme.md successfully updated with new contributors.")
+
+          except Exception as e:
+              print(f"Error updating readme.md: {e}", file=sys.stderr)
+              sys.exit(1)  # Exit with an error
           EOF
 
       - name: Commit and push changes
@@ -120,9 +112,9 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add readme.md
-          if ! git diff-index --quiet HEAD; then
+          if ! git diff --cached --quiet; then
             git commit -m "Update contributors list in readme.md"
             git push
           else
-            echo "No changes to commit."
+            echo "No changes detected in readme.md, skipping commit."
           fi
