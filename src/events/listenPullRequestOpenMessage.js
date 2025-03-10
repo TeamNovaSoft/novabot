@@ -2,6 +2,7 @@ const { Events } = require('discord.js');
 const { translateLanguage } = require('../languages');
 const { formatPRMessage } = require('../utils/pr-formatter');
 const { DISCORD_SERVER } = require('../config');
+const saveErrorLog = require('../utils/log-error');
 
 const headers = {
   Authorization: `token ${DISCORD_SERVER.githubOrganizationPAT}`,
@@ -130,9 +131,9 @@ async function handleError(error, message) {
   console.error('Error processing the PR:', error);
 
   if (!message.reply) {
-    return console.error(
-      'Could not send the reply due to an error in message.reply.'
-    );
+    saveErrorLog({
+      message: 'Could not send the reply due to an error in message.reply.',
+    });
   }
   await message.reply({
     content: translateLanguage('qaMention.errorProcessingMention'),
