@@ -1,20 +1,21 @@
 name: Deploy to AWS
 
 on:
+  push:
   pull_request:
     types:
       - closed
-    paths:
-      - '**/*.js'
-      - '**/*.json'
-      - '**/*.ts'
+    #paths:
+    #  - '**/*.js'
+    #  - '**/*.json'
+    #  - '**/*.ts'
     branches:
       - main
       - dev
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
+    #if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Determine environment
