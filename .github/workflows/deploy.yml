@@ -4,10 +4,10 @@ on:
   pull_request:
     types:
       - closed
-    paths:
-      - '**/*.js'
-      - '**/*.json'
-      - '**/*.ts'
+    #paths:
+    #  - '**/*.js'
+    #  - '**/*.json'
+    #  - '**/*.ts'
     branches:
       - main
       - dev
