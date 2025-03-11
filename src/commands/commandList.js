@@ -12,6 +12,7 @@ const sendMessageCommand = require('./utility/send-message');
 const serverCommand = require('./utility/server');
 const userCommand = require('./utility/user');
 const votePointsCommand = require('./utility/vote-points');
+const assingPointCommand = require('./utility/assignPoint');
 
 const commandList = [
   pingCommand,
@@ -28,5 +29,6 @@ const commandList = [
   serverCommand,
   userCommand,
   votePointsCommand,
+  assingPointCommand,
 ];
 module.exports = commandList;
