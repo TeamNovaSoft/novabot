@@ -18,7 +18,8 @@ To successfully deploy, certain environment variables need to be configured as s
 | `AWS_HOST`            | IP address or domain of the EC2 instance. Example: `ec2-18-231-104-85.sa-east-1.compute.amazonaws.com` |
 | `AWS_SSH_PRIVATE_KEY` | SSH private key to access the EC2 instance. Must match the public key in `~/.ssh/authorized_keys`.     |
 | `AWS_USER`            | User with deployment permissions. Usually `ec2-user` for Amazon Linux or `ubuntu` for Ubuntu.          |
-| `AWS_WORK_DIRECTORY`  | Path where the app is hosted on EC2. Example: `/home/ec2-user/app`.                                    |
+| DEPLOY_PATH_STAGING   | Path where the production app is hosted on EC2. Example: `/home/ec2-user/app`.                         |
+| DEPLOY_PATH_PROD      | Path where the staging app is hosted on EC2. Example: `/home/ec2-user/app`.                            |
 
 ## Example GitHub Actions Workflow Configuration
 
@@ -50,5 +51,7 @@ For the full configuration go to [link](../.github/workflows/deploy.yml)
 - AWS_SSH_PRIVATE_KEY → SSH private key for access.
 - AWS_USER → User to connect to the instance.
 - AWS_WORK_DIRECTORY → Path where the application is hosted on EC2.
+- DEPLOY_PATH_STAGING → Path where the production app is hosted on EC2. Example: `/home/ec2-user/app`.
+- DEPLOY_PATH_PROD → Path where the staging app is hosted on EC2. Example: `/home/ec2-user/app`.
 
 With this configuration, GitHub Actions can automate the deployment of your application on AWS EC2 securely and efficiently. 🚀
