@@ -23,11 +23,11 @@ jobs:
           if [[ "${{ github.base_ref }}" == "main" ]]; then
             echo "ENV=production" >> $GITHUB_ENV
             echo "DEPLOY_PATH=${{ secrets.DEPLOY_PATH_PROD }}" >> $GITHUB_ENV
-            echo "PM2_NAME=bot-prod" >> $GITHUB_ENV
+            echo "PM2_NAME=app" >> $GITHUB_ENV
           elif [[ "${{ github.base_ref }}" == "dev" ]]; then
             echo "ENV=staging" >> $GITHUB_ENV
             echo "DEPLOY_PATH=${{ secrets.DEPLOY_PATH_STAGING }}" >> $GITHUB_ENV
-            echo "PM2_NAME=bot-staging" >> $GITHUB_ENV
+            echo "PM2_NAME=app_staging" >> $GITHUB_ENV
           else
             echo "Skipping deployment"
             exit 1
