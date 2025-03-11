@@ -4,10 +4,10 @@ on:
   pull_request:
     types:
       - closed
-    #paths:
-    #  - '**/*.js'
-    #  - '**/*.json'
-    #  - '**/*.ts'
+    paths:
+      - '**/*.js'
+      - '**/*.json'
+      - '**/*.ts'
     branches:
       - main
       - dev
@@ -21,15 +21,23 @@ jobs:
         id: set-env
         run: |
           if [[ "${{ github.base_ref }}" == "main" ]]; then
+            if [[ -z "${{ secrets.DEPLOY_PATH_PROD }}" ]]; then
+              echo "Skipping deployment: DEPLOY_PATH_PROD is not set"
+              exit 1
+            fi
             echo "ENV=production" >> $GITHUB_ENV
             echo "DEPLOY_PATH=${{ secrets.DEPLOY_PATH_PROD }}" >> $GITHUB_ENV
             echo "PM2_NAME=app" >> $GITHUB_ENV
           elif [[ "${{ github.base_ref }}" == "dev" ]]; then
+            if [[ -z "${{ secrets.DEPLOY_PATH_STAGING }}" ]]; then
+              echo "Skipping deployment: DEPLOY_PATH_STAGING is not set"
+              exit 1
+            fi
             echo "ENV=staging" >> $GITHUB_ENV
             echo "DEPLOY_PATH=${{ secrets.DEPLOY_PATH_STAGING }}" >> $GITHUB_ENV
             echo "PM2_NAME=app_staging" >> $GITHUB_ENV
           else
-            echo "Skipping deployment"
+            echo "Skipping deployment: Unrecognized branch"
             exit 1
           fi
 
