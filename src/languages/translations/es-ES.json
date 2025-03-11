@@ -44,7 +44,8 @@
     "notAThread": "¡Lo siento, esto no es un hilo!",
     "message": "{{userId}} está solicitando un punto por **{{reason}}**. Revisa el mensaje aquí: {{threadLink}}",
     "success": "Tu solicitud ha sido enviada exitosamente.",
-    "error": "Ocurrió un error al enviar tu solicitud. Por favor, inténtalo nuevamente más tarde."
+    "error": "Ocurrió un error al enviar tu solicitud. Por favor, inténtalo nuevamente más tarde.",
+    "adminChannelNotFound": "No se pudo encontrar el canal de administración."
   },
   "searchMyPoints": {
     "description": "Obtener la consulta de búsqueda de Discord para verificar puntos en un mes específico",
@@ -83,7 +84,10 @@
     "drawNotSupported": "El empate no está soportado.",
     "invalidResult": "El resultado no fue válido o no se otorgaron puntos.",
     "notFindChannel": "No se pudo encontrar el canal.",
-    "errorOcurred": "Ocurrió un error al procesar el resultado de la votación."
+    "errorOcurred": "Ocurrió un error al procesar el resultado de la votación.",
+    "notFoundPollDescription": "Descripción de la encuesta No encontrada",
+    "notFoundDescriptionParts": "No se encontró pointType o userId, o ambos, en la descripción de la votación",
+    "notFinalResultFound": "No se ha encontrado el resultado final. Probablemente no se otorgaron puntos en esta encuesta"
   },
   "calendarSchedules": {
     "errorMissingParameters": "Error: Faltan uno o más parámetros requeridos (cliente, evento, event.start.dateTime o timeZone).",
@@ -102,7 +106,8 @@
     "saturday": "Sábado",
     "sunday": "Domingo",
     "calendarEventCollector": "Calendario de eventos programado para ejecutarse de {{readableDays}}, de {{hoursRange}} cada {{eachMinute}} minutos (hora Colombia).",
-    "reminderDiscordEvent": "Recordatorio: el evento \"{{eventName}}\" está a punto de finalizar pronto. ¡Únete o finaliza tus actividades si quieres participar!"
+    "reminderDiscordEvent": "Recordatorio: el evento \"{{eventName}}\" está a punto de finalizar pronto. ¡Únete o finaliza tus actividades si quieres participar!",
+    "eventAlreadyEndedError": "El evento ha terminado, el recordatorio ha caducado."
   },
   "messageSchedules": {
     "errorMissingParameters": "Error: Falta uno o más parámetros requeridos (client, channel, message, datetime, o timeZone).",
@@ -195,10 +200,25 @@
     "reminderUpdated": "✅ ¡Recordatorio actualizado con éxito!",
     "editReminderTitle": "Editar recordatorio",
     "newTimeLabel": "Nueva fecha/hora",
-    "newMessageLabel": "Nuevo mensaje del recordatorio"
+    "newMessageLabel": "Nuevo mensaje del recordatorio",
+    "timeZone": "Selecciona tu zona horaria"
   },
   "interaction": {
     "errorButton": "Hubo un error al procesar la interacción del botón.",
     "errorSubmission": "Hubo un error al procesar tu envío."
+  },
+
+  "assignPoints": {
+    "description": "Asignar puntos manualmente a un usuario (solo rol admin)",
+    "userOption": "Usuario que recibirá los puntos",
+    "pointTypeOption": "Tipo de puntos a asignar",
+    "cantidadOption": "Cantidad de puntos a asignar",
+    "reasonOption": "Razón para asignar el punto",
+    "noPermission": "No tienes permiso para usar este comando.",
+    "orderReceived": "Orden recibida. Asignando {{quantity}} {{pointType}} punto(s) a {{target}}.",
+    "reasonLabel": "Razón:",
+    "errorAssigning": "Hubo un error al asignar puntos. Por favor, intenta de nuevo más tarde.",
+    "normalPoints": "puntos normales",
+    "boostedPoints": "puntos potenciados"
   }
 }

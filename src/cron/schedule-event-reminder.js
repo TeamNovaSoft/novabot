@@ -9,14 +9,45 @@ const {
 const saveErrorLog = require('../utils/log-error');
 const { sendErrorToChannel } = require('../utils/send-error');
 
-const hoursInMilliseconds = 60 * 60 * 1000;
-const dayInMilliseconds = 24 * hoursInMilliseconds;
+const HOURS_IN_MILLISECONDS = 60 * 60 * 1000;
+const DAYS_IN_MILLISECONDS = 24 * HOURS_IN_MILLISECONDS;
 
 let activeCronJobs = [];
 
 const clearAllCronJobs = () => {
   activeCronJobs.forEach((job) => job.stop());
   activeCronJobs = [];
+};
+
+const generateReminderCronExpression = (event) => {
+  const now = new Date();
+  const eventEndTimeDate = new Date(event.scheduledEndTimestamp);
+  const timeDifference = eventEndTimeDate - now;
+  const reminderTime = new Date(
+    timeDifference > DAYS_IN_MILLISECONDS
+      ? eventEndTimeDate - DAYS_IN_MILLISECONDS
+      : eventEndTimeDate - HOURS_IN_MILLISECONDS
+  );
+
+  if (reminderTime < now) {
+    throw new Error(
+      translateLanguage('calendarSchedules.eventAlreadyEndedError')
+    );
+  }
+
+  return dateToCronExpression(reminderTime);
+};
+
+const sentEventReminder = async (event, eventAnnouncementChannel) => {
+  if (eventAnnouncementChannel) {
+    await eventAnnouncementChannel.send(
+      translateLanguage('calendarSchedules.reminderDiscordEvent', {
+        eventName: event.name,
+      })
+    );
+  } else {
+    console.log(translateLanguage('calendarSchedules.errorChannelNotFound'));
+  }
 };
 
 /**
@@ -32,52 +63,40 @@ const clearAllCronJobs = () => {
  * @param {string} timeZone - The timezone to use for scheduling the reminder.
  */
 const scheduleEventReminder = ({ client, event, channelId, timeZone }) => {
-  const now = new Date();
-  const eventEndTimeDate = new Date(event.scheduledEndTimestamp);
-  const timeDifference = eventEndTimeDate - now;
+  try {
+    const cronExpression = generateReminderCronExpression(event);
 
-  const reminderTime = new Date(
-    timeDifference > dayInMilliseconds
-      ? eventEndTimeDate - dayInMilliseconds
-      : eventEndTimeDate - hoursInMilliseconds
-  );
+    if (!cronExpression) {
+      return;
+    }
 
-  if (reminderTime < now) {
-    return;
-  }
-
-  const cronExpression = dateToCronExpression(reminderTime);
-
-  const job = new CronJob(
-    cronExpression,
-    async () => {
-      try {
-        const eventAnnouncementChannel = await client.channels.fetch(channelId);
-        if (eventAnnouncementChannel) {
-          await eventAnnouncementChannel.send(
-            translateLanguage('calendarSchedules.reminderDiscordEvent', {
-              eventName: event.name,
-            })
+    const job = new CronJob(
+      cronExpression,
+      async () => {
+        try {
+          const eventAnnouncementChannel =
+            await client.channels.fetch(channelId);
+          await sentEventReminder(event, eventAnnouncementChannel);
+        } catch (error) {
+          saveErrorLog(
+            `Error sending event reminder in channel - '${channelId}': ${error.message}`
           );
-        } else {
-          console.log(
-            translateLanguage('calendarSchedules.errorChannelNotFound')
-          );
+          sendErrorToChannel(client, error);
         }
-      } catch (error) {
-        saveErrorLog(
-          `Error sending event reminder in channel - '${channelId}': ${error.message}`
-        );
-        sendErrorToChannel(client, error);
-      }
-    },
-    null,
-    true,
-    timeZone
-  );
+      },
+      null,
+      true,
+      timeZone
+    );
 
-  job.start();
-  activeCronJobs.push(job);
+    job.start();
+    activeCronJobs.push(job);
+  } catch (error) {
+    saveErrorLog(
+      `Error sending event reminder in channel - '${channelId}': ${error.message}`
+    );
+    sendErrorToChannel(client, error);
+  }
 };
 
 /**

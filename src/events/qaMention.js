@@ -1,6 +1,32 @@
-const { Events } = require('discord.js');
+const { Events, roleMention } = require('discord.js');
 const { QA_MENTION } = require('../config');
 const { translateLanguage } = require('../languages');
+
+const sendQAReviewRequest = async ({ qaRole, message, qaRequestChannel }) => {
+  const qaRoleIdRef = roleMention(qaRole.id);
+  const messageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
+
+  await qaRequestChannel.send(
+    translateLanguage('qaMention.qaRequest', {
+      role: qaRoleIdRef,
+      link: messageLink,
+      content: message.content,
+    })
+  );
+};
+
+const handleErrorResponse = async ({ error, message }) => {
+  console.error('Error processing the mention:', error);
+
+  if (message.reply) {
+    await message.reply({
+      content: translateLanguage('qaMention.errorProcessingMention'),
+      ephemeral: true,
+    });
+  } else {
+    console.error('Could not send the reply due to an error in message.reply.');
+  }
+};
 
 module.exports = {
   name: Events.MessageCreate,
@@ -9,7 +35,6 @@ module.exports = {
       if (!message?.author?.bot || !message.guild) {
         return;
       }
-
       const mentionedRoles = message.mentions.roles;
 
       if (!mentionedRoles?.has(QA_MENTION.discordQARoleId)) {
@@ -30,29 +55,9 @@ module.exports = {
       }
 
       const qaRole = mentionedRoles.get(QA_MENTION.discordQARoleId);
-      const qaRoleIdRef = `<@&${qaRole.id}>`;
-      const messageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
-
-      await qaRequestChannel.send(
-        translateLanguage('qaMention.qaRequest', {
-          role: qaRoleIdRef,
-          link: messageLink,
-          content: message.content,
-        })
-      );
+      await sendQAReviewRequest({ qaRole, message, qaRequestChannel });
     } catch (error) {
-      console.error('Error processing the mention:', error);
-
-      if (message.reply) {
-        await message.reply({
-          content: translateLanguage('qaMention.errorProcessingMention'),
-          ephemeral: true,
-        });
-      } else {
-        console.error(
-          'Could not send the reply due to an error in message.reply.'
-        );
-      }
+      await handleErrorResponse({ error, message });
     }
   },
 };

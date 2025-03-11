@@ -10,6 +10,8 @@ const {
   CRON_STATUS_REMINDER,
 } = require('../config');
 
+const STATUS_KEY = 'pr-request-review';
+
 /**
  * Gets the mapped status text.
  * @param {string} key - Status key.
@@ -25,10 +27,50 @@ const getMappedStatusText = (key) => {
 };
 
 /**
+ * Processes threads in a given channel for a specific status.
+ * @param {Channel} channel - Discord text channel.
+ * @param {string} statusText - Text to search in thread names.
+ * @param {object} statusConfig - Configuration object.
+ */
+const matchedThreads = async (channel, statusText, statusConfig) => {
+  try {
+    const threads = await channel.threads.fetchActive();
+    const pendingThreads = threads.threads.filter((thread) =>
+      thread.name.includes(statusText)
+    );
+    const now = Date.now();
+    const messageContent = [];
+    pendingThreads.forEach((thread) => {
+      const lastActivity =
+        thread.lastMessage?.createdTimestamp || thread.createdTimestamp || 0;
+      if (lastActivity === 0) {
+        console.warn(
+          `Skipping thread "${thread.name}" due to missing timestamps.`
+        );
+        return;
+      }
+      if (now - lastActivity >= statusConfig.rememberAfterMs) {
+        const translatedMessage = translateLanguage(
+          statusConfig.messageTranslationKey
+        )
+          .replace('{{threadName}}', thread.name)
+          .replace('{{threadUrl}}', thread.url);
+        messageContent.push(translatedMessage);
+      }
+    });
+    if (messageContent.length > 0) {
+      await channel.send({ content: messageContent.join('\n') });
+    }
+  } catch (error) {
+    saveErrorLog(error);
+  }
+};
+
+/**
  * Checks threads with a specific status and sends reminders if necessary.
  * @param {Client} client - Instance of the Discord.js client.
- * @param {string} statusKey - Key of the status to check.
- * @returns {string|null}
+ * @param {string} statusText - Mapped status text to search in thread names.
+ * @param {object} statusConfig - Status configuration.
  */
 const checkThreadsForStatus = async (client, statusText, statusConfig) => {
   try {
@@ -39,7 +81,6 @@ const checkThreadsForStatus = async (client, statusText, statusConfig) => {
       );
       return;
     }
-
     const channels = await guild.channels.fetch();
     const textChannels = channels.filter(
       (channel) => channel.type === ChannelType.GuildText
@@ -48,46 +89,8 @@ const checkThreadsForStatus = async (client, statusText, statusConfig) => {
       console.error('No text channels found.');
       return;
     }
-
     for (const channel of textChannels.values()) {
-      try {
-        const threads = await channel.threads.fetchActive();
-        const pendingThreads = threads.threads.filter((thread) =>
-          thread.name.includes(statusText)
-        );
-
-        const now = Date.now();
-        const messageContent = [];
-        pendingThreads.forEach((thread) => {
-          const lastActivity =
-            thread.lastMessage?.createdTimestamp ||
-            thread.createdTimestamp ||
-            0;
-
-          if (lastActivity === 0) {
-            console.warn(
-              `Skipping thread "${thread.name}" due to missing timestamps.`
-            );
-            return;
-          }
-
-          if (now - lastActivity >= statusConfig.rememberAfterMs) {
-            const translatedMessage = translateLanguage(
-              statusConfig.messageTranslationKey
-            )
-              .replace('{{threadName}}', thread.name)
-              .replace('{{threadUrl}}', thread.url);
-
-            messageContent.push(translatedMessage);
-          }
-        });
-
-        if (messageContent.length > 0) {
-          await channel.send({ content: messageContent.join('\n') });
-        }
-      } catch (error) {
-        saveErrorLog(error);
-      }
+      await matchedThreads(channel, statusText, statusConfig);
     }
   } catch (error) {
     saveErrorLog(error);
@@ -130,4 +133,4 @@ const scheduleAllStatusChecks = (client) => {
   );
 };
 
-module.exports = { scheduleAllStatusChecks, getMappedStatusText };
+module.exports = { scheduleAllStatusChecks, getMappedStatusText, STATUS_KEY };

@@ -1,5 +1,6 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { translateLanguage } = require('../languages');
+const moment = require('moment-timezone');
 const { EmbedBuilder } = require('discord.js');
 
 async function updateCountdownEmbed(reply, reminderDate, message, exactTime) {
@@ -19,29 +20,32 @@ async function updateCountdownEmbed(reply, reminderDate, message, exactTime) {
 
   await reply.edit({ embeds: [updatedEmbed] });
 }
-
-function parseDate(timeInput) {
+function parseDate(timeInput, timezone = 'UTC') {
   const fullDatePattern = /^\d{2}-\d{2}-\d{4} \d{2}:\d{2}$/;
   const timeOnlyPattern = /^\d{2}:\d{2}$/;
-  let reminderDate;
+  let reminderMoment;
 
   if (fullDatePattern.test(timeInput)) {
     const [datePart, timePart] = timeInput.split(' ');
-    const [day, month, year] = datePart.split('-').map(Number);
-    const [hour, minute] = timePart.split(':').map(Number);
-    reminderDate = new Date(year, month - 1, day, hour, minute);
+    const [day, month, year] = datePart.split('-');
+    reminderMoment = moment.tz(
+      `${year}-${month}-${day} ${timePart}`,
+      'YYYY-MM-DD HH:mm',
+      timezone
+    );
   } else if (timeOnlyPattern.test(timeInput)) {
     const [hour, minute] = timeInput.split(':').map(Number);
-    reminderDate = new Date();
-    reminderDate.setHours(hour, minute, 0, 0);
-    if (reminderDate.getTime() < Date.now()) {
-      reminderDate.setDate(reminderDate.getDate() + 1);
+    reminderMoment = moment
+      .tz(timezone)
+      .set({ hour, minute, second: 0, millisecond: 0 });
+    if (reminderMoment.isBefore(moment.tz(timezone))) {
+      reminderMoment.add(1, 'day');
     }
   } else {
     return null;
   }
 
-  return reminderDate;
+  return reminderMoment.toDate();
 }
 
 function cancelReminder(activeReminders, userId, reminderId) {
@@ -106,10 +110,71 @@ async function resetReminder(
   await disableReminderButtons(interaction);
   await startReminder(interaction, newReminderDate, message, timeInMsFromNow);
 }
+
 function formatReminderDate(reminderDate) {
   const formattedDate = `${String(reminderDate.getDate()).padStart(2, '0')}-${String(reminderDate.getMonth() + 1).padStart(2, '0')}-${reminderDate.getFullYear()} ${String(reminderDate.getHours()).padStart(2, '0')}:${String(reminderDate.getMinutes()).padStart(2, '0')}`;
 
   return formattedDate;
+}
+
+function buildReminderEmbed(reminderDate) {
+  const exactTime = `<t:${Math.floor(reminderDate.getTime() / 1000)}:F>`;
+  return new EmbedBuilder()
+    .setColor('#0099ff')
+    .setTitle(translateLanguage('remindme.reminderCreatedTitle'))
+    .setDescription(
+      `**${translateLanguage('remindme.remindingAt')}:** ${exactTime}\n⏳ **${translateLanguage('remindme.updatingCountdown')}**`
+    )
+    .setFooter({ text: translateLanguage('remindme.dmNotice') });
+}
+
+function buildReminderButtons(reminderId) {
+  return new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`set_interval_${reminderId}`)
+      .setLabel(translateLanguage('remindme.resetReminder'))
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId(`edit_reminder_${reminderId}`)
+      .setLabel(translateLanguage('remindme.editReminder'))
+      .setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId(`delete_reminder_${reminderId}`)
+      .setLabel(translateLanguage('remindme.cancelReminder'))
+      .setStyle(ButtonStyle.Danger)
+  );
+}
+
+function scheduleCountdown(reply, reminderDate, message) {
+  const exactTime = `<t:${Math.floor(reminderDate.getTime() / 1000)}:F>`;
+  return setInterval(() => {
+    updateCountdownEmbed(reply, reminderDate, message, exactTime);
+  }, 1000);
+}
+
+function scheduleTimeout(
+  interaction,
+  reply,
+  message,
+  timeInMsFromNow,
+  activeReminders,
+  userId,
+  reminderId
+) {
+  return setTimeout(async () => {
+    await disableReminderButtons(reply);
+    try {
+      await interaction.user.send(
+        translateLanguage('remindme.reminderMessage').replace(
+          '{{message}}',
+          message
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    cancelReminder(activeReminders, userId, reminderId);
+  }, timeInMsFromNow);
 }
 
 module.exports = {
@@ -120,4 +185,8 @@ module.exports = {
   updateCountdownEmbed,
   resetReminder,
   formatReminderDate,
+  buildReminderEmbed,
+  buildReminderButtons,
+  scheduleCountdown,
+  scheduleTimeout,
 };
