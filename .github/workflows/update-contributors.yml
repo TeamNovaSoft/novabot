@@ -75,7 +75,7 @@ jobs:
                       f"    <tr>"
                       f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
                       f"<td><a href=\"{contributor['html_url']}\">{contributor['login']}</a></td>"
-                      f"<td><a href=\"https://github.com/{os.getenv('GITHUB_REPOSITORY')}/commits?author={contributor['login']}\">Insights</a></td>"
+                      f"<td><a href=\"https://github.com/{os.getenv('GITHUB_REPOSITORY')}/graphs/contributors\">📈</a></td>"
                       f"</tr>"
                   )
                   html_lines.append(row)
