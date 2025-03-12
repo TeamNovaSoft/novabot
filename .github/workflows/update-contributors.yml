@@ -1,6 +1,9 @@
 name: Update Contributors
 
 on:
+  push:
+    branches:
+      - '**'    
   workflow_dispatch:
   pull_request:
     types: [closed]
@@ -66,7 +69,7 @@ jobs:
                          "<h2>Contributors</h2>",
                          "<table border='1' cellspacing='0' cellpadding='5'>",
                          "  <thead>",
-                         "    <tr><th>Avatar</th><th>Username</th><th>Contributions</th></tr>",
+                         "    <tr><th>Avatar</th><th>Username</th><th>Insights</th></tr>",
                          "  </thead>",
                          "  <tbody>"
                      ]
@@ -78,7 +81,7 @@ jobs:
                              f"    <tr>"
                              f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
                              f"<td><a href=\"{contributor['html_url']}\">{contributor['login']}</a></td>"
-                             f"<td>{contributor['contributions']} contributions</td>"
+                             f"<td><a href=\"https://github.com/{os.getenv('GITHUB_REPOSITORY')}/graphs/contributors\">Insights</a></td>"
                              f"</tr>"
                          )
                          html_lines.append(row)
