@@ -13,7 +13,7 @@ on:
 
 jobs:
   update-contributors:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
 
     steps:
@@ -58,11 +58,6 @@ jobs:
                              content = f.read()
                      else:
                          content = ""
-             
-                     # (Optional) Check if the PR author is already in readme.md
-                     # if pr_author and pr_author in content:
-                     #    print(f"User {pr_author} is already in readme.md. No changes made.")
-                     #    sys.exit(0)
              
                      # Build the HTML table for contributors
                      html_lines = [
