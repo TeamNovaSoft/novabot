@@ -299,11 +299,11 @@ This example schedules a message saying "Good morning!" to be sent to the specif
     <tr><th>Avatar</th><th>Username</th><th>Insights</th></tr>
   </thead>
   <tbody>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/89047058?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/YoelFerreyra">YoelFerreyra</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/commits?author=YoelFerreyra">Insights</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ARenzDev">ARenzDev</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/commits?author=ARenzDev">Insights</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/66505715?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/heliomar-pena">heliomar-pena</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/commits?author=heliomar-pena">Insights</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/49282275?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/joset98">joset98</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/commits?author=joset98">Insights</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/commits?author=Israel-Laguan">Insights</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/89047058?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/YoelFerreyra">YoelFerreyra</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ARenzDev">ARenzDev</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/66505715?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/heliomar-pena">heliomar-pena</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/49282275?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/joset98">joset98</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
   </tbody>
 </table>
 <!-- CONTRIBUTORS END -->
