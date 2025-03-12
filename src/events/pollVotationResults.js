@@ -92,7 +92,7 @@ module.exports = {
   async execute(_client, message) {
     try {
       const { embeds, author } = message;
-      const isBotAuthor = author?.bot;
+      const isBotAuthor = author?.id === message.client.user.id;
       const isTypePoll = embeds?.[0]?.data?.type === 'poll_result';
       const questionFields = embeds[0]?.fields;
       const havePollData = Array.isArray(questionFields);
