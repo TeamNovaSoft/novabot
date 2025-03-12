@@ -206,6 +206,19 @@
     "errorButton": "There was an error processing your button interaction.",
     "errorSubmission": "There was an error processing your submission."
   },
+  "assignPoints": {
+    "description": "Manually assign points to a user (admin role only)",
+    "userOption": "User who will receive the points",
+    "pointTypeOption": "Type of points to assign",
+    "quantityOption": "Number of points to assign",
+    "reasonOption": "Reason for assigning the point",
+    "noPermission": "You don't have permission to use this command.",
+    "orderReceived": "Order received. Assigning {{quantity}} {{pointType}} point(s) to {{target}}.",
+    "reasonLabel": "Reason:",
+    "errorAssigning": "There was an error assigning points. Please try again later.",
+    "normalPoints": "Normal Points",
+    "boostedPoints": "Boosted Points"
+  },
   "pullRequestOpen": {
     "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
     "errorFetchPR": "Error trying to fetch PR data. status: {{status}}"
