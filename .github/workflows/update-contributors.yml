@@ -60,9 +60,9 @@ jobs:
                   content = ""
 
               # (Optional) Check if the PR author is already in readme.md
-              if pr_author and pr_author in content:
-                 print(f"User {pr_author} is already in readme.md. No changes made.")
-                 sys.exit(0)
+              # if pr_author and pr_author in content:
+              #   print(f"User {pr_author} is already in readme.md. No changes made.")
+              #   sys.exit(0)
           
               # Build the HTML table for contributors
               html_lines = [
@@ -75,8 +75,6 @@ jobs:
               ]
           
               for contributor in contributors:
-                  if contributor["login"] == pr_author:
-                      continue  # Skip the PR author
                   row = (
                       f"    <tr>"
                       f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
