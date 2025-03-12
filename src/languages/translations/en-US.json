@@ -205,5 +205,9 @@
   "interaction": {
     "errorButton": "There was an error processing your button interaction.",
     "errorSubmission": "There was an error processing your submission."
+  },
+  "pullRequestOpen": {
+    "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
+    "errorFetchPR": "Error trying to fetch PR data. status: {{status}}"
   }
 }

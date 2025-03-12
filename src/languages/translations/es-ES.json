@@ -206,5 +206,9 @@
   "interaction": {
     "errorButton": "Hubo un error al procesar la interacción del botón.",
     "errorSubmission": "Hubo un error al procesar tu envío."
+  },
+  "pullRequestOpen": {
+    "errorExtractDataFromURL": "Error al extraer el nombre del repositorio o el número de PR de la URL.",
+    "errorFetchPR": "Error al intentar obtener datos de PR. Estado: {{status}}"
   }
 }

@@ -34,20 +34,25 @@ function cleanStringArray(arr) {
 
 function extractDataFromPRGitHubUrl(githubURL) {
   if (!githubURL) {
-    return githubURL;
+    return;
   }
-  const urlParts = githubURL.split('/');
-  const pullNumberPartIndex = urlParts.length - 1;
-  const repositoryPartIndex = pullNumberPartIndex - 2;
+
+  const [organization, repository, type, pullNumber] = new URL(
+    githubURL
+  ).pathname
+    .split('/')
+    .slice(1);
 
   return {
-    repository: urlParts[repositoryPartIndex],
-    pullNumber: urlParts[pullNumberPartIndex],
+    organization,
+    repository,
+    type,
+    pullNumber,
   };
 }
 
 function isPullRequestOpen(prTitle = '') {
-  return prTitle.toLowerCase().includes('pull request opened');
+  return /pull request opened/i.test(prTitle);
 }
 
 async function fetchPullRequest(pullRequestMetadata) {
@@ -55,11 +60,22 @@ async function fetchPullRequest(pullRequestMetadata) {
   const { repository: repo, pullNumber } = extractDataFromPRGitHubUrl(
     pullRequestMetadata.url
   );
+
+  if (!repo || !pullNumber) {
+    throw new Error(
+      translateLanguage('pullRequestOpen.errorExtractDataFromURL')
+    );
+  }
+
   const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}`;
   const response = await fetch(url, { headers });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new Error(
+      translateLanguage('pullRequestOpen.errorFetchPR', {
+        status: response.status,
+      })
+    );
   }
 
   const data = await response.json();
@@ -104,10 +120,11 @@ function extractPRMetadata(description = '') {
 
 function generateOverview(prRestMetadata) {
   const prMetadataKeys = Object.keys(prRestMetadata);
-  let prOverview = '';
-  prMetadataKeys.forEach((metadataKey, index) => {
-    prOverview += `## ${capitalizeText(prRestMetadata[metadataKey].title)}\n${prRestMetadata[metadataKey].description}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
-  });
+  const prOverview = prMetadataKeys.reduce((overview, metadataKey, index) => {
+    return `${
+      overview
+    }## ${capitalizeText(prRestMetadata[metadataKey].title)}\n${prRestMetadata[metadataKey].description}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
+  }, '');
 
   return prOverview;
 }
