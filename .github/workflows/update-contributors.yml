@@ -45,9 +45,7 @@ jobs:
           end_marker = "<!-- CONTRIBUTORS END -->"
           
           try:
-              # Get the PR author (if applicable)
-              pr_author = os.getenv("PR_AUTHOR", "").strip()
-          
+
               # Read the list of contributors obtained from the API
               with open("contributors.json", "r", encoding="utf-8") as f:
                   contributors = json.load(f)
