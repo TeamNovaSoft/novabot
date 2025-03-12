@@ -146,6 +146,7 @@ function formatPullRequestMessage(pullData, prMessageMeta) {
 
 async function handleError(error, message) {
   console.error('Error processing the PR:', error);
+  saveErrorLog(error);
 
   if (!message.reply) {
     saveErrorLog({
