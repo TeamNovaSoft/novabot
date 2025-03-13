@@ -1,92 +1,85 @@
-const { SlashCommandBuilder } = require('discord.js');
+const {
+  SlashCommandBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  ActionRowBuilder,
+} = require('discord.js');
 const { MAPPED_STATUS_COMMANDS } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { sendErrorToChannel } = require('../../utils/send-error');
 
-const COMMAND_KEYS = Object.keys(MAPPED_STATUS_COMMANDS);
-
-const setThreadNameWithStatus = async ({ channel, newStatus }) => {
-  const emojisRegExp = new RegExp(
-    `(${Object.values(MAPPED_STATUS_COMMANDS).join('|')})`,
-    'ig'
-  );
-
-  const channelName = channel.name.replace(emojisRegExp, '').trim();
-
-  const updatedChannelName = `${newStatus} ${channelName}`;
-  await channel.setName(updatedChannelName);
+const novabotStatus = () => {
+  return new StringSelectMenuBuilder()
+    .setCustomId('starter')
+    .setPlaceholder('Make a selection!')
+    .addOptions(
+      Object.keys(MAPPED_STATUS_COMMANDS.novabot).map((status) => {
+        return new StringSelectMenuOptionBuilder()
+          .setLabel(status)
+          .setDescription(status)
+          .setValue(status);
+      })
+    );
 };
 
-const updateThreadStatus = async (interaction) => {
-  const { options, channel, user } = interaction;
-  const status = options.getString('status');
-  const message = options.getString('message');
-  const newStatus = MAPPED_STATUS_COMMANDS[status];
-
-  if (!newStatus) {
-    return await interaction.editReply(
-      translateLanguage('changeStatus.invalidStatus')
+const i18nStatus = () => {
+  return new StringSelectMenuBuilder()
+    .setCustomId('starter')
+    .setPlaceholder('Make a selection!')
+    .addOptions(
+      Object.keys(MAPPED_STATUS_COMMANDS['i18n-populator']).map((status) => {
+        return new StringSelectMenuOptionBuilder()
+          .setLabel(status)
+          .setDescription(status)
+          .setValue(status);
+      })
     );
-  }
+};
 
-  await setThreadNameWithStatus({ channel, newStatus });
-
-  if (message) {
-    const markdownMessage =
-      `# ${newStatus} ${status.replaceAll('-', ' ')}\n\n` +
-      `${message}\n\n` +
-      `> ${user}`;
-    await channel.send(markdownMessage);
-  }
-
-  await interaction.editReply(
-    translateLanguage('changeStatus.updatedStatus', {
-      status: status.replaceAll('-', ' '),
-    })
-  );
+const evoStatus = () => {
+  return new StringSelectMenuBuilder()
+    .setCustomId('starter')
+    .setPlaceholder('Make a selection!')
+    .addOptions(
+      Object.keys(MAPPED_STATUS_COMMANDS['evo-crypter']).map((status) => {
+        return new StringSelectMenuOptionBuilder()
+          .setLabel(status)
+          .setDescription(status)
+          .setValue(status);
+      })
+    );
 };
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('change-status')
     .setDescription(translateLanguage('changeStatus.description'))
-    .setDescriptionLocalizations(keyTranslations('changeStatus.description'))
-    .addStringOption((option) =>
-      option
-        .setName('status')
-        .setDescription(translateLanguage('changeStatus.statusOption'))
-        .setDescriptionLocalizations(
-          keyTranslations('changeStatus.statusOption')
-        )
-        .setRequired(true)
-        .addChoices(
-          COMMAND_KEYS.map((command) => ({
-            name: command.replaceAll('pr-', '').replaceAll('-', ' '),
-            value: command,
-          }))
-        )
-    )
-    .addStringOption((option) =>
-      option
-        .setName('message')
-        .setDescription(translateLanguage('changeStatus.messageOption'))
-        .setDescriptionLocalizations(
-          keyTranslations('changeStatus.messageOption')
-        )
-        .setRequired(false)
-    ),
+    .setDescriptionLocalizations(keyTranslations('changeStatus.description')),
   async execute(interaction) {
     try {
-      await interaction.deferReply({ ephemeral: true });
-
-      if (!interaction.channel.isThread()) {
-        return await interaction.editReply({
-          content: translateLanguage('changeStatus.notAThread'),
-          ephemeral: true,
-        });
+      const { channel } = interaction;
+      let select = [];
+      switch (channel.name) {
+        case 'novabot':
+          select = novabotStatus();
+          break;
+        case 'i18n-populator':
+          select = i18nStatus();
+          break;
+        case 'evo-crypter':
+          select = evoStatus();
+          break;
+        default:
+          select = novabotStatus();
+          break;
       }
 
-      await updateThreadStatus(interaction);
+      const row = new ActionRowBuilder().addComponents(select);
+
+      await interaction.reply({
+        content: 'Choose your starter!',
+        components: [row],
+      });
     } catch (error) {
       console.error(error);
       await sendErrorToChannel(interaction, error);
