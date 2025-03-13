@@ -121,9 +121,7 @@ function extractPRMetadata(description = '') {
 function generateOverview(prRestMetadata) {
   const prMetadataKeys = Object.keys(prRestMetadata);
   const prOverview = prMetadataKeys.reduce((overview, metadataKey, index) => {
-    return `${
-      overview
-    }## ${capitalizeText(prRestMetadata[metadataKey].title)}\n${prRestMetadata[metadataKey].description}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
+    return `${overview}## ${capitalizeText(prRestMetadata[metadataKey].title)}\n${prRestMetadata[metadataKey].description}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
   }, '');
 
   return prOverview;
