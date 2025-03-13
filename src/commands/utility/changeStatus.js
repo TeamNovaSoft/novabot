@@ -8,40 +8,12 @@ const { MAPPED_STATUS_COMMANDS } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { sendErrorToChannel } = require('../../utils/send-error');
 
-const novabotStatus = () => {
+const createStatusMenu = (category) => {
   return new StringSelectMenuBuilder()
-    .setCustomId('starter')
+    .setCustomId('status_select')
     .setPlaceholder('Make a selection!')
     .addOptions(
-      Object.keys(MAPPED_STATUS_COMMANDS.novabot).map((status) => {
-        return new StringSelectMenuOptionBuilder()
-          .setLabel(status)
-          .setDescription(status)
-          .setValue(status);
-      })
-    );
-};
-
-const i18nStatus = () => {
-  return new StringSelectMenuBuilder()
-    .setCustomId('starter')
-    .setPlaceholder('Make a selection!')
-    .addOptions(
-      Object.keys(MAPPED_STATUS_COMMANDS['i18n-populator']).map((status) => {
-        return new StringSelectMenuOptionBuilder()
-          .setLabel(status)
-          .setDescription(status)
-          .setValue(status);
-      })
-    );
-};
-
-const evoStatus = () => {
-  return new StringSelectMenuBuilder()
-    .setCustomId('starter')
-    .setPlaceholder('Make a selection!')
-    .addOptions(
-      Object.keys(MAPPED_STATUS_COMMANDS['evo-crypter']).map((status) => {
+      Object.keys(MAPPED_STATUS_COMMANDS[category]).map((status) => {
         return new StringSelectMenuOptionBuilder()
           .setLabel(status)
           .setDescription(status)
@@ -58,26 +30,27 @@ module.exports = {
   async execute(interaction) {
     try {
       const { channel } = interaction;
-      let select = [];
+      let selectMenu;
+
       switch (channel.name) {
         case 'novabot':
-          select = novabotStatus();
+          selectMenu = createStatusMenu('novabot');
           break;
         case 'i18n-populator':
-          select = i18nStatus();
+          selectMenu = createStatusMenu('i18n-populator');
           break;
         case 'evo-crypter':
-          select = evoStatus();
+          selectMenu = createStatusMenu('evo-crypter');
           break;
         default:
-          select = novabotStatus();
+          selectMenu = createStatusMenu('novabot');
           break;
       }
 
-      const row = new ActionRowBuilder().addComponents(select);
+      const row = new ActionRowBuilder().addComponents(selectMenu);
 
       await interaction.reply({
-        content: 'Choose your starter!',
+        content: 'Choose your status!',
         components: [row],
       });
     } catch (error) {
@@ -86,4 +59,19 @@ module.exports = {
       await interaction.editReply(translateLanguage('changeStatus.error'));
     }
   },
+};
+
+module.exports.handleInteraction = async (interaction) => {
+  if (!interaction.isStringSelectMenu()) {
+    return;
+  }
+
+  if (interaction.customId === 'status_select') {
+    const selectedStatus = interaction.values[0];
+
+    await interaction.update({
+      content: `You selected: **${selectedStatus}**`,
+      components: [],
+    });
+  }
 };
