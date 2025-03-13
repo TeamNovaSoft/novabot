@@ -52,7 +52,7 @@ jobs:
               else:
                   content = ""
 
-              (Optional) Check if the PR author is already in readme.md
+              # (Optional) Check if the PR author is already in readme.md
               if pr_author and pr_author in content:
                  print(f"User {pr_author} is already in readme.md. No changes made.")
                  sys.exit(0)
