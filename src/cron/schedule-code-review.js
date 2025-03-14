@@ -12,13 +12,18 @@ const {
 
 const STATUS_KEY = 'pr-request-review';
 
+const flatMappedStatusCommands = Object.entries(MAPPED_STATUS_COMMANDS).reduce(
+  (acc, [, statuses]) => ({ ...acc, ...statuses }),
+  {}
+);
+
 /**
  * Gets the mapped status text.
  * @param {string} key - Status key.
  * @returns {string|null} - Mapped text or null if not found.
  */
 const getMappedStatusText = (key) => {
-  const statusText = MAPPED_STATUS_COMMANDS[key];
+  const statusText = flatMappedStatusCommands[key];
   if (!statusText) {
     console.error(`Mapped status for ${key} not found.`);
     return null;
