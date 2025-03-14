@@ -10,6 +10,8 @@ const DISCORD_SERVER = {
   discordAnnouncementsChannel: process.env.DISCORD_ANNOUNCEMENTS_CHANNEL_ID,
   scheduledDiscordEventsEnabled:
     process.env.SCHEDULED_DISCORD_EVENTS_ENABLED === 'true',
+  githubPRReviewChannel: process.env.GITHUB_PR_REVIEW_CHANNEL,
+  githubOrganizationPAT: process.env.GITHUB_ACCESS_TOKEN,
 };
 
 const LISTEN_NEW_EVENTS = {

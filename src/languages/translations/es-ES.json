@@ -207,7 +207,6 @@
     "errorButton": "Hubo un error al procesar la interacción del botón.",
     "errorSubmission": "Hubo un error al procesar tu envío."
   },
-
   "assignPoints": {
     "description": "Asignar puntos manualmente a un usuario (solo rol admin)",
     "userOption": "Usuario que recibirá los puntos",
@@ -220,5 +219,9 @@
     "errorAssigning": "Hubo un error al asignar puntos. Por favor, intenta de nuevo más tarde.",
     "normalPoints": "puntos normales",
     "boostedPoints": "puntos potenciados"
+  },
+  "pullRequestOpen": {
+    "errorExtractDataFromURL": "Error al extraer el nombre del repositorio o el número de PR de la URL.",
+    "errorFetchPR": "Error al intentar obtener datos de PR. Estado: {{status}}"
   }
 }

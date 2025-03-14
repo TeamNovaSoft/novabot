@@ -206,7 +206,6 @@
     "errorButton": "There was an error processing your button interaction.",
     "errorSubmission": "There was an error processing your submission."
   },
-
   "assignPoints": {
     "description": "Manually assign points to a user (admin role only)",
     "userOption": "User who will receive the points",
@@ -219,5 +218,9 @@
     "errorAssigning": "There was an error assigning points. Please try again later.",
     "normalPoints": "Normal Points",
     "boostedPoints": "Boosted Points"
+  },
+  "pullRequestOpen": {
+    "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
+    "errorFetchPR": "Error trying to fetch PR data. status: {{status}}"
   }
 }
