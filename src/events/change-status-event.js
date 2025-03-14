@@ -21,8 +21,6 @@ const handleStringSelectMenuInteraction = async (interaction) => {
       return;
     }
 
-    await interaction.deferUpdate();
-
     const selectedValue = interaction.values[0];
     const { channel } = interaction;
 
@@ -36,15 +34,15 @@ const handleStringSelectMenuInteraction = async (interaction) => {
       newStatus,
     });
 
-    await interaction.followUp({
-      content: `Status changed to **${selectedValue}**!`,
-      ephemeral: true,
+    await interaction.update({
+      content: `✅ Status changed to **${selectedValue}**!`,
+      components: [],
     });
   } catch (error) {
     console.error('Error handling select menu interaction:', error);
     if (!interaction.replied && !interaction.deferred) {
       await interaction.reply({
-        content: 'There was an error while handling your selection!',
+        content: '❌ There was an error while handling your selection!',
         ephemeral: true,
       });
     }

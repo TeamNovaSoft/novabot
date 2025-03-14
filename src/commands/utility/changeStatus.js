@@ -43,7 +43,7 @@ module.exports = {
           selectMenu = createStatusMenu('evo-crypter');
           break;
         default:
-          selectMenu = createStatusMenu('novabot');
+          selectMenu = createStatusMenu('evo-crypter');
           break;
       }
 
