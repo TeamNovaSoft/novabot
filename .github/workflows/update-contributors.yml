@@ -21,10 +21,16 @@ jobs:
       - name: Get PR author
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+            pr_author="${{ github.event.pull_request.user.login }}"
+            if [ -z "$pr_author" ]; then
+                echo "PR author not found, using default actor: ${{ github.actor }}"
+              pr_author="${{ github.actor }}"
+            fi
           else
-              echo "PR_AUTHOR=${{ github.actor }}" >> $GITHUB_ENV
+            pr_author="${{ github.actor }}"
           fi
+        
+          echo "PR_AUTHOR=$pr_author" >> $GITHUB_ENV
         
 
       - name: Fetch list of contributors
@@ -45,6 +51,9 @@ jobs:
           start_marker = "<!-- CONTRIBUTORS START -->"
           end_marker = "<!-- CONTRIBUTORS END -->"
 
+          # Obtener PR_AUTHOR desde las variables de entorno
+          pr_author = os.getenv("PR_AUTHOR")
+
           try:
               # Read the list of contributors obtained from the API
               with open("contributors.json", "r", encoding="utf-8") as f:
@@ -59,8 +68,8 @@ jobs:
 
               # (Optional) Check if the PR author is already in readme.md
               if pr_author and pr_author in content:
-                 print(f"User {pr_author} is already in readme.md. No changes made.")
-                 sys.exit(0)
+                  print(f"User {pr_author} is already in readme.md. No changes made.")
+                  sys.exit(0)
 
               # Build the HTML table for contributors
               html_lines = [
@@ -74,7 +83,7 @@ jobs:
 
               for contributor in contributors:
                   if contributor["login"] == pr_author:
-                       continue  # Skip the PR author
+                      continue  # Skip the PR author
                   row = (
                       f"    <tr>"
                       f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"
