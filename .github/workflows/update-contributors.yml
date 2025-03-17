@@ -23,7 +23,7 @@ jobs:
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             pr_author="${{ github.event.pull_request.user.login }}"
             if [ -z "$pr_author" ]; then
-              echo "No se halló al author del PR, usando actor por defecto: ${{ github.actor }}"
+                echo "PR author not found, using default actor: ${{ github.actor }}"
               pr_author="${{ github.actor }}"
             fi
           else
