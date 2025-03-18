@@ -82,8 +82,11 @@ jobs:
               ]
 
               for contributor in contributors:
-                  if contributor["login"] == pr_author:
-                      continue  # Skip the PR author
+                  bots_to_exclude = ["actions-user", "github-actions[bot]", "GitHub Action"]
+
+                  if contributor["login"] in bots_to_exclude:
+                      continue
+
                   row = (
                       f"    <tr>"
                       f"<td><img src=\"{contributor['avatar_url']}?s=50\" alt=\"Avatar\" width=\"50\" height=\"50\"></td>"

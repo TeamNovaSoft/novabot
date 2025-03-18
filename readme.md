@@ -302,7 +302,6 @@ This example schedules a message saying "Good morning!" to be sent to the specif
     <tr><td><img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ARenzDev">ARenzDev</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
     <tr><td><img src="https://avatars.githubusercontent.com/u/89047058?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/YoelFerreyra">YoelFerreyra</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
     <tr><td><img src="https://avatars.githubusercontent.com/u/49282275?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/joset98">joset98</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/65916846?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/actions-user">actions-user</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
     <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td><a href="https://github.com/TeamNovaSoft/novabot/graphs/contributors">📈</a></td></tr>
   </tbody>
 </table>
