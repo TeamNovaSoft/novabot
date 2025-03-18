@@ -221,6 +221,6 @@
   },
   "pullRequestOpen": {
     "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
-    "errorFetchPR": "Error trying to fetch PR data. status: {{status}}"
+    "errorFetchPR": "Error trying to fetch PR data to {{prURL}}. URL: {{prURL}}. status: {{status}}"
   }
 }
