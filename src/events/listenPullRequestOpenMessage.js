@@ -1,11 +1,11 @@
 const { Events } = require('discord.js');
 const { translateLanguage } = require('../languages');
 const { formatPRMessage } = require('../utils/pr-formatter');
-const { DISCORD_SERVER } = require('../config');
+const { GITHUB_PUBLISH_OPENED_PR } = require('../config');
 const saveErrorLog = require('../utils/log-error');
 
 const headers = {
-  Authorization: `token ${DISCORD_SERVER.githubOrganizationPAT}`,
+  Authorization: `token ${GITHUB_PUBLISH_OPENED_PR.githubOrganizationPAT}`,
   'Content-Type': 'application/json',
 };
 
@@ -56,10 +56,11 @@ function isPullRequestOpen(prTitle = '') {
 }
 
 async function fetchPullRequest(pullRequestMetadata) {
-  const owner = pullRequestMetadata.author.name;
-  const { repository: repo, pullNumber } = extractDataFromPRGitHubUrl(
-    pullRequestMetadata.url
-  );
+  const {
+    repository: repo,
+    pullNumber,
+    organization,
+  } = extractDataFromPRGitHubUrl(pullRequestMetadata.url);
 
   if (!repo || !pullNumber) {
     throw new Error(
@@ -67,13 +68,14 @@ async function fetchPullRequest(pullRequestMetadata) {
     );
   }
 
-  const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}`;
+  const url = `https://api.github.com/repos/${organization}/${repo}/pulls/${pullNumber}`;
   const response = await fetch(url, { headers });
 
   if (!response.ok) {
     throw new Error(
       translateLanguage('pullRequestOpen.errorFetchPR', {
         status: response.status,
+        prURL: url,
       })
     );
   }
@@ -162,6 +164,10 @@ module.exports = {
   name: Events.MessageCreate,
   async execute(client, message) {
     try {
+      if (!GITHUB_PUBLISH_OPENED_PR.githubPRPublishEnabled) {
+        return;
+      }
+
       if (!message?.author?.bot || !message.guild) {
         return;
       }
@@ -184,7 +190,7 @@ module.exports = {
       );
 
       const channel = await client.channels.fetch(
-        DISCORD_SERVER.githubPRReviewChannel
+        GITHUB_PUBLISH_OPENED_PR.githubPRReviewChannel
       );
 
       await channel.send(formattedMessage);
