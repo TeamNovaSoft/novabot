@@ -53,8 +53,8 @@ const REQUEST_POINT = {
 };
 
 const SCHEDULE_MESSAGES = {
-  timeZone: process.env.TIME_ZONE,
-  pathMarkdownFolder: path.join(process.cwd(), '/markdown-files'),
+  timeZone: process.env.TIME_ZONE || 'America/Bogota',
+  pathMarkdownFolder: path.join(process.cwd(), '/bot-schedule-messages'),
 };
 
 const SCHEDULE_CALENDAR = {
