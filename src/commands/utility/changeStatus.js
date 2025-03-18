@@ -12,7 +12,7 @@ const createStatusMenu = (channel) => {
   const selectedChannel = MAPPED_STATUS_COMMANDS[channel] ? channel : 'novabot';
 
   return new StringSelectMenuBuilder()
-    .setCustomId('status_select')
+    .setCustomId('change_status_select')
     .setPlaceholder('Make a selection!')
     .addOptions(
       Object.keys(MAPPED_STATUS_COMMANDS[selectedChannel]).map((status) => {
