@@ -12,8 +12,8 @@ const {
 
 const STATUS_KEY = 'pr-request-review';
 
-const flatMappedStatusCommands = Object.entries(MAPPED_STATUS_COMMANDS).reduce(
-  (acc, [, statuses]) => ({ ...acc, ...statuses }),
+const flatMappedStatusCommands = Object.values(MAPPED_STATUS_COMMANDS).reduce(
+  (acc, statuses) => ({ ...acc, ...statuses }),
   {}
 );
 

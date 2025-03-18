@@ -8,12 +8,14 @@ const { MAPPED_STATUS_COMMANDS } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { sendErrorToChannel } = require('../../utils/send-error');
 
-const createStatusMenu = (category) => {
+const createStatusMenu = (channel) => {
+  const selectedChannel = MAPPED_STATUS_COMMANDS[channel] ? channel : 'novabot';
+
   return new StringSelectMenuBuilder()
     .setCustomId('status_select')
     .setPlaceholder('Make a selection!')
     .addOptions(
-      Object.keys(MAPPED_STATUS_COMMANDS[category]).map((status) => {
+      Object.keys(MAPPED_STATUS_COMMANDS[selectedChannel]).map((status) => {
         return new StringSelectMenuOptionBuilder()
           .setLabel(status)
           .setDescription(status)
@@ -30,22 +32,7 @@ module.exports = {
   async execute(interaction) {
     try {
       const { channel } = interaction;
-      let selectMenu;
-
-      switch (channel.name) {
-        case 'novabot':
-          selectMenu = createStatusMenu('novabot');
-          break;
-        case 'i18n-populator':
-          selectMenu = createStatusMenu('i18n-populator');
-          break;
-        case 'evo-crypter':
-          selectMenu = createStatusMenu('evo-crypter');
-          break;
-        default:
-          selectMenu = createStatusMenu('evo-crypter');
-          break;
-      }
+      const selectMenu = createStatusMenu(channel.name);
 
       const row = new ActionRowBuilder().addComponents(selectMenu);
 
@@ -66,7 +53,7 @@ module.exports.handleInteraction = async (interaction) => {
     return;
   }
 
-  if (interaction.customId === 'status_select') {
+  if (interaction.customId === 'change_status_select') {
     const selectedStatus = interaction.values[0];
 
     await interaction.update({
