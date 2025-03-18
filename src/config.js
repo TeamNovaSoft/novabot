@@ -73,8 +73,8 @@ const REQUEST_POINT = {
 };
 
 const SCHEDULE_MESSAGES = {
-  timeZone: process.env.TIME_ZONE,
-  pathMarkdownFolder: path.join(process.cwd(), '/markdown-files'),
+  timeZone: process.env.TIME_ZONE || 'America/Bogota',
+  pathMarkdownFolder: path.join(process.cwd(), '/bot-schedule-messages'),
 };
 
 const SCHEDULE_CALENDAR = {
@@ -173,6 +173,12 @@ const ADMIN_ROLE_ID = {
   adminRole: process.env.ADMIN_ROLE_ID || '1014267063788908585',
 };
 
+const GITHUB_PUBLISH_OPENED_PR = {
+  githubPRReviewChannel: process.env.GITHUB_PR_REVIEW_CHANNEL,
+  githubOrganizationPAT: process.env.GITHUB_ACCESS_TOKEN,
+  githubPRPublishEnabled: process.env.GITHUB_PR_PUBLISH_ENABLED === 'true',
+};
+
 module.exports = {
   LISTEN_NEW_EVENTS,
   DISCORD_SERVER,
@@ -188,4 +194,5 @@ module.exports = {
   CRON_STATUS_REMINDER,
   FIREBASE_CONFIG,
   ADMIN_ROLE_ID,
+  GITHUB_PUBLISH_OPENED_PR,
 };
