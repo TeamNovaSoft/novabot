@@ -161,12 +161,6 @@ const ASSIGN_TASK_FORUM = {
   tags: {
     availableTagId: process.env.AVAILABLE_TAG_ID,
     assignedTagId: process.env.ASSIGNED_TAG_ID,
-    allowedDevelopersTags: process.env.ALLOWED_DEVELOPERS_TAGS
-      ? process.env.ALLOWED_DEVELOPERS_TAGS.split(';').map((tag) => {
-          const [value, name] = tag.split(',');
-          return { value, name };
-        })
-      : [],
   },
 };
 
