@@ -226,7 +226,7 @@
   },
   "assignTaskForum": {
     "description": "Asigna la etiqueta de usuario a una tarea publicada en el foro.",
-    "userOption": "Elige un usuario para asignar",
+    "userOption": "Usuario para asignar",
     "isNotForumThread": "Este hilo no es de un foro para asignar tareas.",
     "userTagNotAvailable": "Este usuario no está disponible en las etiquetas.",
     "userAssignedTask": "Este usuario ya está asignado en esta tarea",

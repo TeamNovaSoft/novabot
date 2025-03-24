@@ -225,7 +225,7 @@
   },
   "assignTaskForum": {
     "description": "Assign the user tag to a task posted on the forum.",
-    "userOption": "Choose a user to assign",
+    "userOption": "User to assign",
     "isNotForumThread": "This thread is not from a forum for assigning tasks.",
     "userTagNotAvailable": "This user is not available in tags.",
     "userAssignedTask": "This user is already assigned in this task",
