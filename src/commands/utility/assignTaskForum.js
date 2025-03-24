@@ -3,13 +3,36 @@ const { ASSIGN_TASK_FORUM } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { sendErrorToChannel } = require('../../utils/send-error');
 
-const FORUM_TYPE = 15;
+const CHANNEL_TYPES = {
+  FORUM: 15,
+};
 
 async function replyWithError(interaction, translationKey) {
   return await interaction.editReply({
     content: translateLanguage(translationKey),
     ephemeral: true,
   });
+}
+
+function getUserTagForAssignment(forum, assignedUser, channel) {
+  if (CHANNEL_TYPES.FORUM !== forum.type) {
+    return { reply: 'assignTaskForum.isNotForumThread' };
+  }
+
+  const forumAvailableTag = forum.availableTags;
+  const userTag = forumAvailableTag.find(
+    (tag) => tag.name.toLowerCase() === assignedUser
+  );
+
+  if (!userTag) {
+    return { reply: 'assignTaskForum.userTagNotAvailable' };
+  }
+
+  if (channel.appliedTags.includes(userTag.id)) {
+    return { reply: 'assignTaskForum.userAssignedTask' };
+  }
+
+  return { userTag };
 }
 
 async function handleError(interaction, error) {
@@ -30,41 +53,33 @@ module.exports = {
         .setDescriptionLocalizations(
           keyTranslations('assignTaskForum.userOption')
         )
-        .setRequired(true)
-        .addChoices([...ASSIGN_TASK_FORUM.tags.allowedDevelopersTags])
     ),
   async execute(interaction) {
     try {
       await interaction.deferReply();
-      const { channel, options } = interaction;
+      const { channel, options, user } = interaction;
 
       if (!channel.isThread()) {
         return replyWithError(interaction, 'changeStatus.notAThread');
       }
 
       const forum = channel.parent;
-      const assignedUser = options.getString('user');
+      const assignedUser = (
+        options.getString('user') || user.username
+      ).toLowerCase();
+      const { userTag, reply } = getUserTagForAssignment(
+        forum,
+        assignedUser,
+        channel
+      );
 
-      if (FORUM_TYPE !== forum.type) {
-        return replyWithError(interaction, 'assignTaskForum.isNotForumThread');
-      }
-
-      if (channel.appliedTags.includes(assignedUser)) {
-        return replyWithError(interaction, 'assignTaskForum.userAssignedTask');
-      }
-
-      const forumAvailableTagIds = forum.availableTags.map((tags) => tags.id);
-
-      if (!forumAvailableTagIds.includes(assignedUser)) {
-        return replyWithError(
-          interaction,
-          'assignTaskForum.userTagNotAvailable'
-        );
+      if (reply) {
+        return replyWithError(interaction, reply);
       }
 
       await channel.setAppliedTags([
         ASSIGN_TASK_FORUM.tags.assignedTagId,
-        assignedUser,
+        userTag.id,
       ]);
 
       await interaction.editReply({
