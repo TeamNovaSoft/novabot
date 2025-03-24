@@ -1,3 +1,5 @@
+const moment = require('moment-timezone');
+
 /**
  * Converts a date string into a CRON expression.
  *
@@ -12,12 +14,14 @@
  * dateToCronExpression('2022-01-01T00:00:00');
  * // Returns '0 0 1 1 *'
  */
-function dateToCronExpression(dateString) {
-  const date = new Date(dateString);
-  const minutes = date.getMinutes();
-  const hours = date.getHours();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
+function dateToCronExpression(dateString, eventTimeZone = 'America/Bogota') {
+  const date = moment.tz(dateString, eventTimeZone);
+
+  const minutes = date.minutes();
+  const hours = date.hours();
+  const day = date.date();
+  const month = date.month() + 1; // Meses en moment van de 0-11, sumamos 1
+
   return `${minutes} ${hours} ${day} ${month} *`;
 }
 
