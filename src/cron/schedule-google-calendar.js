@@ -78,7 +78,7 @@ const scheduleEventNotification = async ({ client, event }) => {
   const job = new CronJob(
     cronExpression,
     async () => {
-      await sendCalendarEventNotification();
+      await sendCalendarEventNotification(client, event);
     },
     null,
     true,
@@ -123,6 +123,7 @@ const setupCalendarNotifications = async (client) => {
     () => {
       console.log('Running scheduled calendar notifications...');
       scheduleCalendarNotifications(client);
+      console.log(activeCronJobs);
     },
     null,
     true,

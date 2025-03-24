@@ -13,7 +13,7 @@ const createStatusMenu = (channel) => {
 
   return new StringSelectMenuBuilder()
     .setCustomId('change_status_select')
-    .setPlaceholder('Make a selection!')
+    .setPlaceholder(translateLanguage('changeStatus.placeholder'))
     .addOptions(
       Object.keys(MAPPED_STATUS_COMMANDS[selectedChannel]).map((status) => {
         return new StringSelectMenuOptionBuilder()
@@ -37,7 +37,7 @@ module.exports = {
       const row = new ActionRowBuilder().addComponents(selectMenu);
 
       await interaction.reply({
-        content: 'Choose your status!',
+        content: translateLanguage('changeStatus.selectStatus'),
         components: [row],
       });
     } catch (error) {
@@ -57,7 +57,9 @@ module.exports.handleInteraction = async (interaction) => {
     const selectedStatus = interaction.values[0];
 
     await interaction.update({
-      content: `You selected: **${selectedStatus}**`,
+      content: translateLanguage('changeStatus.success', {
+        status: selectedStatus,
+      }),
       components: [],
     });
   }
