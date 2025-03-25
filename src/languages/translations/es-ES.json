@@ -6,7 +6,10 @@
     "invalidStatus": "Estado no válido.",
     "updatedStatus": "Estado actualizado a {{status}}",
     "error": "Ocurrió un error al actualizar el estado.",
-    "messageOption": "Envia un mensage para detallar tus cambios"
+    "messageOption": "Envia un mensage para detallar tus cambios",
+    "statusChanged": "Estado cambiado a {{status}}",
+    "chooseYourStatus": "Elige tu estado",
+    "placeholder": "Haz una selección"
   },
   "convertTime": {
     "description": "Convertir hora entre zonas horarias",

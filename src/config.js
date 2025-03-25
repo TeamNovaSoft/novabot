@@ -18,14 +18,36 @@ const LISTEN_NEW_EVENTS = {
 
 const MAPPED_STATUS_COMMANDS = {
   // unicode emojis
-  'pr-request-review': '❗',
-  'pr-request-changes': '🔁',
-  'pr-approved-by-code-review': '👍',
-  'pr-task-cancelled': '🚫',
-  'pr-work-in-progress': '👷🏾',
-  'pr-merged-on-staging': '🟡',
-  'pr-merged-in-prod': '🟢',
-  'pr-done': '✅',
+  novabot: {
+    'pr-request-review': '❗',
+    'pr-request-changes': '🔁',
+    'pr-approved-by-code-review': '👍',
+    'pr-task-cancelled': '🚫',
+    'pr-work-in-progress': '👷🏾',
+    'pr-merged-on-dev': '🟡',
+    'pr-merged-in-prod': '🟢',
+    'pr-done': '✅',
+  },
+  'i18n-populator': {
+    'pr-request-review': '❗',
+    'pr-request-changes': '🔁',
+    'pr-approved-by-code-review': '👍',
+    'pr-task-cancelled': '🚫',
+    'pr-work-in-progress': '👷🏾',
+    'pr-merged-on-dev': '🟡',
+    'pr-merged-in-master': '🟢',
+    'pr-done': '✅',
+  },
+  'evo-crypter': {
+    'pr-request-review': '❗',
+    'pr-request-changes': '🔁',
+    'pr-approved-by-code-review': '👍',
+    'pr-task-cancelled': '🚫',
+    'pr-work-in-progress': '👷🏾',
+    'pr-merged-on-staging': '🟡',
+    'pr-merged-in-prod': '🟢',
+    'pr-done': '✅',
+  },
 };
 
 const PR_TEMPLATE = {
