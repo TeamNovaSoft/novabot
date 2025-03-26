@@ -59,7 +59,9 @@ module.exports = {
 
       if (message) {
         const markdownMessage =
-          `# Channel status changed\n\n` + `${message}\n\n` + `> ${user}`;
+          `# ${translateLanguage('changeStatus.markdownMessage')}\n\n` +
+          `${message}\n\n` +
+          `> ${user}`;
 
         await channel.send(markdownMessage);
       }

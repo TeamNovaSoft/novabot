@@ -9,7 +9,8 @@
     "messageOption": "Send a message to detail your changes",
     "statusChanged": "Status changed to {{status}}",
     "selectStatus": "Choose your status",
-    "placeholder": "Make a selection"
+    "placeholder": "Make a selection",
+    "markdownMessage": "Channel status changed"
   },
   "convertTime": {
     "description": "Convert time between time zones",

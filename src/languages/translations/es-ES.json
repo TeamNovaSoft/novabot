@@ -9,7 +9,8 @@
     "messageOption": "Envia un mensage para detallar tus cambios",
     "statusChanged": "Estado cambiado a {{status}}",
     "selectStatus": "Elige tu estado",
-    "placeholder": "Haz una selección"
+    "placeholder": "Haz una selección",
+    "markdownMessage": "Estado del canal cambiado"
   },
   "convertTime": {
     "description": "Convertir hora entre zonas horarias",
