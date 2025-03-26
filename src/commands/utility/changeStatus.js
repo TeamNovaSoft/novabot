@@ -67,7 +67,7 @@ module.exports = {
       }
 
       await interaction.followUp({
-        content: 'Your status has been updated successfully!',
+        content: translateLanguage('changeStatus.statusUpdatedSuccesfully'),
       });
     } catch (error) {
       console.error(error);

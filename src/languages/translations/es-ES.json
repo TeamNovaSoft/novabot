@@ -10,7 +10,8 @@
     "statusChanged": "Estado cambiado a {{status}}",
     "selectStatus": "Elige tu estado",
     "placeholder": "Haz una selección",
-    "markdownMessage": "Estado del canal cambiado"
+    "markdownMessage": "Estado del canal cambiado",
+    "statusUpdatedSuccesfully": "Estado actualizado exitosamente!"
   },
   "convertTime": {
     "description": "Convertir hora entre zonas horarias",

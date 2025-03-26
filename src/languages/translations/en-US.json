@@ -10,7 +10,8 @@
     "statusChanged": "Status changed to {{status}}",
     "selectStatus": "Choose your status",
     "placeholder": "Make a selection",
-    "markdownMessage": "Channel status changed"
+    "markdownMessage": "Channel status changed",
+    "statusUpdatedSuccesfully": "Status updated successfully!"
   },
   "convertTime": {
     "description": "Convert time between time zones",
