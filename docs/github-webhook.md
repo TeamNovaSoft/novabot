@@ -2,6 +2,8 @@
 
 This documentation details the process of setting up an integration between Discord and GitHub, enabling seamless communication and automation of key notifications directly within your Discord channels. By connecting your GitHub repository with Discord, you'll be able to receive instant alerts about opened `Pull requests`. This integration facilitates real-time collaboration and keeps your team informed about repository changes, improving efficiency and responsiveness to project updates. The integration needs some configs like generate `discord webhook`, setup a `github webhook` in a repository and create `Personal Access Token` in github profile (PAT)
 
+## Configuration Keys
+
 The following keys, filled it with the information of your configuration:
 
 ```
@@ -10,16 +12,23 @@ The following keys, filled it with the information of your configuration:
 ```
 
 - **GITHUB_PR_REVIEW_CHANNEL**: Discord channel where the bot will send PR review messages.
-- **GITHUB_ACCESS_TOKEN**: Your access token for authentication.
+- **GITHUB_ACCESS_TOKEN**: Your access token for authentication (PAT).
 
 > [!NOTE]
 > if you want detailed information about this integration process you could check this [doc](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+
+- [Configuration Keys](#configuration-keys)
+- [Steps to Enable Integration Github Webhook](#steps-to-enable-integration-github-webhook)
+  - [1. Generate discord webhook](#1-generate-discord-webhook)
+  - [2. Setup Github webhook](#2-setup-github-webhook)
+  - [3. Setup Github PAT](#3-setup-github-pat)
+  - [4. Setup Discord Bot with collected Information](#4-setup-discord-bot-with-collected-information)
 
 ## Steps to Enable Integration Github Webhook
 
 ### 1. Generate discord webhook
 
-To enable discord webhook, you need to one integration a service account and obtain webhook url where github will send messages about PRs.
+To enable Discord's Webhook, you need to go to the integrations section in your server settings and obtain Webhook URL where github will send messages about PRs.
 
 #### Steps:
 
@@ -88,3 +97,13 @@ Personal access tokens are an alternative to using passwords for authentication 
 ![pat_classic_form](./configuration/github_pat/pat_classic_form.png)
 
 7. Click Generate token. So the token is available for your app now!
+
+### 4. Finalize Discord Bot Configuration
+
+Once the different configurations have been made to connect discord with the github webhook, some of the data obtained is taken to finish with the configuration and integration of the bot.
+
+#### Steps:
+
+1. Configure the PAT obtained from the github profile in the environment variable `GITHUB_ACCESS_TOKEN`
+
+2. The channel that will receive the open PR alert messages is configured by means of the environment variable `GITHUB_PR_REVIEW_CHANNEL`
