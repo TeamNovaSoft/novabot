@@ -228,5 +228,14 @@
   "pullRequestOpen": {
     "errorExtractDataFromURL": "Error al extraer el nombre del repositorio o el número de PR de la URL.",
     "errorFetchPR": "Error al intentar obtener datos del PR. URL: {{prURL}}. Estado: {{status}}"
+  },
+  "assignTaskForum": {
+    "description": "Asigna la etiqueta de usuario a una tarea publicada en el foro.",
+    "userOption": "Usuario para asignar",
+    "isNotForumThread": "Este hilo no es de un foro para asignar tareas.",
+    "userTagNotAvailable": "Este usuario no está disponible en las etiquetas.",
+    "userAssignedTask": "Este usuario ya está asignado en esta tarea",
+    "taskAssignedSuccessful": "¡Esta tarea se asignó exitosamente!",
+    "error": "Ocurrió un error al asignar la tarea."
   }
 }

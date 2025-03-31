@@ -227,5 +227,14 @@
   "pullRequestOpen": {
     "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
     "errorFetchPR": "Error trying to fetch PR data to {{prURL}}. URL: {{prURL}}. status: {{status}}"
+  },
+  "assignTaskForum": {
+    "description": "Assign the user tag to a task posted on the forum.",
+    "userOption": "User to assign",
+    "isNotForumThread": "This thread is not from a forum for assigning tasks.",
+    "userTagNotAvailable": "This user is not available in tags.",
+    "userAssignedTask": "This user is already assigned in this task",
+    "taskAssignedSuccessful": "This task was assigned successfully!",
+    "error": "An error occurred while assigning the task."
   }
 }
