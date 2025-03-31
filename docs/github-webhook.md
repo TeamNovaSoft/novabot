@@ -9,10 +9,12 @@ The following keys, filled it with the information of your configuration:
 ```
   GITHUB_PR_REVIEW_CHANNEL = DISCORD_CHANNEL_REVIEW
   GITHUB_ACCESS_TOKEN = YOUR_GITHUB_ACCESS_TOKEN
+  GITHUB_PR_PUBLISH_ENABLED = ENABLED_MESSAGES_SENDING
 ```
 
 - **GITHUB_PR_REVIEW_CHANNEL**: Discord channel where the bot will send PR review messages.
 - **GITHUB_ACCESS_TOKEN**: Your access token for authentication (PAT).
+- **GITHUB_PR_PUBLISH_ENABLED**: Controls whether the bot will publish messages related to newly opened Pull Requests (PRs) on GitHub.
 
 > [!NOTE]
 > if you want detailed information about this integration process you could check this [doc](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
@@ -107,3 +109,5 @@ Once the different configurations have been made to connect discord with the git
 1. Configure the PAT obtained from the github profile in the environment variable `GITHUB_ACCESS_TOKEN`
 
 2. The channel that will receive the open PR alert messages is configured by means of the environment variable `GITHUB_PR_REVIEW_CHANNEL`
+
+3. Set the environment variable `GITHUB_PR_PUBLISH_ENABLED` to `true` to enable the publication of PR messages on Discord.
