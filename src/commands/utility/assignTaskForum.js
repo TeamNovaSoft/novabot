@@ -46,13 +46,14 @@ module.exports = {
     .setName('assign')
     .setDescription(translateLanguage('assignTaskForum.description'))
     .setDescriptionLocalizations(keyTranslations('assignTaskForum.description'))
-    .addStringOption((option) =>
+    .addUserOption((option) =>
       option
         .setName('user')
         .setDescription(translateLanguage('assignTaskForum.userOption'))
         .setDescriptionLocalizations(
           keyTranslations('assignTaskForum.userOption')
         )
+        .setRequired(false)
     ),
   async execute(interaction) {
     try {
@@ -65,7 +66,7 @@ module.exports = {
 
       const forum = channel.parent;
       const assignedUser = (
-        options.getString('user') || user.username
+        options.getUser('user').username || user.username
       ).toLowerCase();
       const { userTag, reply } = getUserTagForAssignment(
         forum,
