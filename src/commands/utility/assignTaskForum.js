@@ -66,7 +66,7 @@ module.exports = {
 
       const forum = channel.parent;
       const assignedUser = (
-        options.getUser('user').username || user.username
+        options.getUser('user')?.username || user.username
       ).toLowerCase();
       const { userTag, reply } = getUserTagForAssignment(
         forum,
