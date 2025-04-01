@@ -89,7 +89,7 @@ module.exports = {
     } catch (error) {
       await handleError(interaction, {
         ...error,
-        message: `${error.message.slice(0, 100)}... assignedTagId: ${ASSIGN_TASK_FORUM.tags.assignedTagId}`,
+        message: `${error.message.slice(0, 100)}... ASSIGN_TASK_FORUM: ${JSON.stringify(ASSIGN_TASK_FORUM)}`,
       });
     }
   },
