@@ -44,21 +44,18 @@ The idea is to store the records in separate CSV files, organized in a folder st
 
 Each CSV file will contain the following fields, enabling filtering and point calculation:
 
-- `user_id`
-- `user_name`
 - `date`
 - `project`
 - `task_name`
 - `thread_link`
 - `points`
-- `point_type`
+- `boosted_points`
 
 **Example CSV content:**
 
 ```csv
-user_id,user_name,date,project,task_name,thread_link,points,point_type
-1007642713530839213,heliomar_pena,2025-04-15T13:26:47.680Z,novabot,feat/calendar-reminder-is-not-working,https://discord.com/channels/1007694606244262010/1354048877182976041,3,boosted_points
-
+date,project,task_name,thread_link,points,boosted_points
+2025-04-15T13:26:47.680Z,novabot,feat/calendar-reminder-is-not-working,https://discord.com/channels/1007694606244262010/1354048877182976041,5,0
 ```
 
 ## Details of the Points Recording Proposal
