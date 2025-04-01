@@ -1,66 +1,96 @@
-const {
-  SlashCommandBuilder,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
-  ActionRowBuilder,
-} = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { MAPPED_STATUS_COMMANDS } = require('../../config');
 const { translateLanguage, keyTranslations } = require('../../languages');
 const { sendErrorToChannel } = require('../../utils/send-error');
 
-const createStatusMenu = (channel) => {
-  const selectedChannel = MAPPED_STATUS_COMMANDS[channel] ? channel : 'novabot';
+const COMMAND_KEYS = Object.keys(MAPPED_STATUS_COMMANDS);
 
-  return new StringSelectMenuBuilder()
-    .setCustomId('change_status_select')
-    .setPlaceholder(translateLanguage('changeStatus.placeholder'))
-    .addOptions(
-      Object.keys(MAPPED_STATUS_COMMANDS[selectedChannel]).map((status) => {
-        return new StringSelectMenuOptionBuilder()
-          .setLabel(status)
-          .setDescription(status)
-          .setValue(status);
-      })
+const setThreadNameWithStatus = async ({ channel, newStatus }) => {
+  const emojisRegExp = new RegExp(
+    `(${Object.values(MAPPED_STATUS_COMMANDS).join('|')})`,
+    'ig'
+  );
+
+  const channelName = channel.name.replace(emojisRegExp, '').trim();
+
+  const updatedChannelName = `${newStatus} ${channelName}`;
+  await channel.setName(updatedChannelName);
+};
+
+const updateThreadStatus = async (interaction) => {
+  const { options, channel, user } = interaction;
+  const status = options.getString('status');
+  const message = options.getString('message');
+  const newStatus = MAPPED_STATUS_COMMANDS[status];
+
+  if (!newStatus) {
+    return await interaction.editReply(
+      translateLanguage('changeStatus.invalidStatus')
     );
+  }
+
+  await setThreadNameWithStatus({ channel, newStatus });
+
+  if (message) {
+    const markdownMessage =
+      `# ${newStatus} ${status.replaceAll('-', ' ')}\n\n` +
+      `${message}\n\n` +
+      `> ${user}`;
+    await channel.send(markdownMessage);
+  }
+
+  await interaction.editReply(
+    translateLanguage('changeStatus.updatedStatus', {
+      status: status.replaceAll('-', ' '),
+    })
+  );
 };
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('change-status')
     .setDescription(translateLanguage('changeStatus.description'))
-    .setDescriptionLocalizations(keyTranslations('changeStatus.description')),
+    .setDescriptionLocalizations(keyTranslations('changeStatus.description'))
+    .addStringOption((option) =>
+      option
+        .setName('status')
+        .setDescription(translateLanguage('changeStatus.statusOption'))
+        .setDescriptionLocalizations(
+          keyTranslations('changeStatus.statusOption')
+        )
+        .setRequired(true)
+        .addChoices(
+          COMMAND_KEYS.map((command) => ({
+            name: command.replaceAll('pr-', '').replaceAll('-', ' '),
+            value: command,
+          }))
+        )
+    )
+    .addStringOption((option) =>
+      option
+        .setName('message')
+        .setDescription(translateLanguage('changeStatus.messageOption'))
+        .setDescriptionLocalizations(
+          keyTranslations('changeStatus.messageOption')
+        )
+        .setRequired(false)
+    ),
   async execute(interaction) {
     try {
-      const { channel } = interaction;
-      const selectMenu = createStatusMenu(channel.name);
+      await interaction.deferReply({ ephemeral: true });
 
-      const row = new ActionRowBuilder().addComponents(selectMenu);
+      if (!interaction.channel.isThread()) {
+        return await interaction.editReply({
+          content: translateLanguage('changeStatus.notAThread'),
+          ephemeral: true,
+        });
+      }
 
-      await interaction.reply({
-        content: translateLanguage('changeStatus.selectStatus'),
-        components: [row],
-      });
+      await updateThreadStatus(interaction);
     } catch (error) {
       console.error(error);
       await sendErrorToChannel(interaction, error);
       await interaction.editReply(translateLanguage('changeStatus.error'));
     }
   },
-};
-
-module.exports.handleInteraction = async (interaction) => {
-  if (!interaction.isStringSelectMenu()) {
-    return;
-  }
-
-  if (interaction.customId === 'change_status_select') {
-    const selectedStatus = interaction.values[0];
-
-    await interaction.update({
-      content: translateLanguage('changeStatus.success', {
-        status: selectedStatus,
-      }),
-      components: [],
-    });
-  }
 };

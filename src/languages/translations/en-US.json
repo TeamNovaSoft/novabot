@@ -6,10 +6,7 @@
     "invalidStatus": "Invalid status command.",
     "updatedStatus": "Status updated to {{status}}",
     "error": "An error occurred while updating the status.",
-    "messageOption": "Send a message to detail your changes",
-    "statusChanged": "Status changed to {{status}}",
-    "chooseYourStatus": "Choose your status",
-    "placeholder": "Make a selection"
+    "messageOption": "Send a message to detail your changes"
   },
   "convertTime": {
     "description": "Convert time between time zones",
