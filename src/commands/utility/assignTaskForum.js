@@ -87,7 +87,10 @@ module.exports = {
         content: translateLanguage('assignTaskForum.taskAssignedSuccessful'),
       });
     } catch (error) {
-      await handleError(interaction, error);
+      await handleError(interaction, {
+        ...error,
+        message: `${error.message.slice(0, 100)}... assignedTagId: ${ASSIGN_TASK_FORUM.tags.assignedTagId}`,
+      });
     }
   },
 };
