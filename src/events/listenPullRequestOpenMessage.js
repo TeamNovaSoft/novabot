@@ -89,8 +89,13 @@ function extractPRMetadata(description = '') {
     return {};
   }
 
-  let lastSectionKey = null;
-  const sectionMap = {};
+  let lastSectionKey = 'description';
+  const sectionMap = {
+    description: {
+      title: 'description',
+      description: '',
+    },
+  };
   const lines = cleanStringArray(description.split('\r\n'));
 
   for (const line of lines) {
@@ -123,6 +128,10 @@ function extractPRMetadata(description = '') {
 function generateOverview(prRestMetadata) {
   const prMetadataKeys = Object.keys(prRestMetadata);
   const prOverview = prMetadataKeys.reduce((overview, metadataKey, index) => {
+    if (!prRestMetadata[metadataKey].description) {
+      return overview;
+    }
+
     return `${overview}## ${capitalizeText(prRestMetadata[metadataKey].title)}\n${prRestMetadata[metadataKey].description}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
   }, '');
 
