@@ -1,4 +1,5 @@
 const moment = require('moment-timezone');
+const { SCHEDULE_MESSAGES } = require('../config');
 
 /**
  * Converts a date string into a CRON expression.
@@ -15,8 +16,11 @@ const moment = require('moment-timezone');
  * dateToCronExpression('2022-01-01T00:00:00');
  * // Returns '0 0 1 1 *'
  */
-function dateToCronExpression(dateString, eventTimeZone = 'America/Bogota') {
-  const date = moment.tz(dateString, eventTimeZone);
+function dateToCronExpression(dateString, eventTimeZone) {
+  const timeZoneTarget = eventTimeZone
+    ? eventTimeZone
+    : SCHEDULE_MESSAGES.timeZone;
+  const date = moment.tz(dateString, timeZoneTarget);
 
   const minutes = date.minutes();
   const hours = date.hours();
