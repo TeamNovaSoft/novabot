@@ -37,6 +37,7 @@ function getUserTagForAssignment(forum, assignedUser, channel) {
 
 async function handleError(interaction, error) {
   console.error(error);
+  console.log({ error });
   await sendErrorToChannel(interaction, error);
   await interaction.editReply(translateLanguage('assignTaskForum.error'));
 }
@@ -78,10 +79,7 @@ module.exports = {
         return replyWithError(interaction, reply);
       }
 
-      await channel.setAppliedTags([
-        ASSIGN_TASK_FORUM.tags.assignedTagId,
-        userTag.id,
-      ]);
+      await channel.setAppliedTags([undefined, userTag.id]);
 
       await interaction.editReply({
         content: translateLanguage('assignTaskForum.taskAssignedSuccessful'),
@@ -89,6 +87,7 @@ module.exports = {
     } catch (error) {
       await handleError(interaction, {
         ...error,
+        stack: error.stack,
         message: `${error.message.slice(0, 100)}... ASSIGN_TASK_FORUM: ${JSON.stringify(ASSIGN_TASK_FORUM)}`,
       });
     }
