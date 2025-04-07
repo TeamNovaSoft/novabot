@@ -193,7 +193,8 @@ module.exports = {
         GITHUB_PUBLISH_OPENED_PR.githubPRReviewChannel
       );
 
-      await channel.send(formattedMessage);
+      const prMessage = await channel.send(formattedMessage);
+      prMessage.startThread({ name: pullData.head.ref || 'template title' });
     } catch (error) {
       await handleError(error, message);
     }
