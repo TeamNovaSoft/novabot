@@ -194,7 +194,9 @@ module.exports = {
       );
 
       const prMessage = await channel.send(formattedMessage);
-      prMessage.startThread({ name: pullData.head.ref || 'template title' });
+      prMessage.startThread({
+        name: pullData.head.ref || `New PR-${pullData.number}`,
+      });
     } catch (error) {
       await handleError(error, message);
     }
