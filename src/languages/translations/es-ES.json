@@ -227,7 +227,8 @@
   },
   "pullRequestOpen": {
     "errorExtractDataFromURL": "Error al extraer el nombre del repositorio o el número de PR de la URL.",
-    "errorFetchPR": "Error al intentar obtener datos del PR. URL: {{prURL}}. Estado: {{status}}"
+    "errorFetchPR": "Error al intentar obtener datos del PR. URL: {{prURL}}. Estado: {{status}}",
+    "newPrThreadName": "Nuevo PR-{{pullNumber}}"
   },
   "assignTaskForum": {
     "description": "Asigna la etiqueta de usuario a una tarea publicada en el foro.",

@@ -144,6 +144,21 @@ function formatPullRequestMessage(pullData, prMessageMeta) {
   });
 }
 
+async function startPRThread(client, pullData, formattedMessage) {
+  const channel = await client.channels.fetch(
+    GITHUB_PUBLISH_OPENED_PR.githubPRReviewChannel
+  );
+  const prMessage = await channel.send(formattedMessage);
+
+  prMessage.startThread({
+    name:
+      pullData.head.ref ||
+      translateLanguage('pullRequestOpen.newPrThreadName', {
+        pullNumber: pullData.number,
+      }),
+  });
+}
+
 async function handleError(error, message) {
   console.error('Error processing the PR:', error);
   saveErrorLog(error);
@@ -189,14 +204,7 @@ module.exports = {
         pullRequestMeta
       );
 
-      const channel = await client.channels.fetch(
-        GITHUB_PUBLISH_OPENED_PR.githubPRReviewChannel
-      );
-
-      const prMessage = await channel.send(formattedMessage);
-      prMessage.startThread({
-        name: pullData.head.ref || `New PR-${pullData.number}`,
-      });
+      await startPRThread(client, pullData, formattedMessage);
     } catch (error) {
       await handleError(error, message);
     }

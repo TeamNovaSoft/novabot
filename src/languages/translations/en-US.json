@@ -226,7 +226,8 @@
   },
   "pullRequestOpen": {
     "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
-    "errorFetchPR": "Error trying to fetch PR data to {{prURL}}. URL: {{prURL}}. status: {{status}}"
+    "errorFetchPR": "Error trying to fetch PR data to {{prURL}}. URL: {{prURL}}. status: {{status}}",
+    "newPrThreadName": "New PR-{{pullNumber}}"
   },
   "assignTaskForum": {
     "description": "Assign the user tag to a task posted on the forum.",
