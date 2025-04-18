@@ -78,7 +78,7 @@ const scheduleEventNotification = async ({ client, event }) => {
   const job = new CronJob(
     cronExpression,
     async () => {
-      await sendCalendarEventNotification();
+      await sendCalendarEventNotification(client, event);
     },
     null,
     true,
