@@ -9,23 +9,32 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-function capitalizeText(text) {
-  if (!text) {
+function toCamelCase(str) {
+  if (!str) {
     return '';
   }
-  return text
-    .toLowerCase()
-    .split(' ')
-    .map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    })
-    .join(' ');
-}
 
-function toCamelCase(str) {
   return str
     .toLowerCase()
     .replace(/[^a-zA-Z0-9]+(.)/g, (_, char) => char.toUpperCase());
+}
+
+function camelCaseToNormal(camelCaseString) {
+  const words = camelCaseString
+    .replace(/([A-Z])/g, ' $1')
+    .trim()
+    .split(' ');
+  return words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function extractSectionTitle(line) {
+  const match = line.trim().match(/^#+\s*(.*)/);
+  if (match && match[1]) {
+    return match[1].trim().toLowerCase();
+  }
+  return null;
 }
 
 function cleanStringArray(arr) {
@@ -89,32 +98,31 @@ function extractPRMetadata(description = '') {
     return {};
   }
 
-  let lastSectionKey = null;
-  const sectionMap = {};
+  let lastSectionKey = 'description';
+  const sectionMap = {
+    description: '',
+  };
   const lines = cleanStringArray(description.split('\r\n'));
 
   for (const line of lines) {
     if (line.includes('## ')) {
-      const sectionTitle = line.substring(3).trim().toLowerCase();
+      const sectionTitle = extractSectionTitle(line);
       const sectionKey = toCamelCase(sectionTitle);
-      sectionMap[sectionKey] = {
-        title: sectionTitle,
-        description: '',
-      };
+      sectionMap[sectionKey] = '';
       lastSectionKey = sectionKey;
     } else if (lastSectionKey) {
-      sectionMap[lastSectionKey].description += `${line}\n`;
+      sectionMap[lastSectionKey] += `${line}\n`;
     }
   }
 
   // clean data and extract url image
   Object.entries(sectionMap).forEach(([sectionKey, section]) => {
     if (!sectionKey.includes('screenshot')) {
-      return (section.description = section.description.trim());
+      return (section = section.trim());
     }
 
-    const match = section.description.match(/!\[.*?\]\((.*?)\)/);
-    section.description = match ? match[1] : null;
+    const match = section.match(/!\[.*?\]\((.*?)\)/);
+    section = match ? match[1] : null;
   });
 
   return sectionMap;
@@ -123,7 +131,11 @@ function extractPRMetadata(description = '') {
 function generateOverview(prRestMetadata) {
   const prMetadataKeys = Object.keys(prRestMetadata);
   const prOverview = prMetadataKeys.reduce((overview, metadataKey, index) => {
-    return `${overview}## ${capitalizeText(prRestMetadata[metadataKey].title)}\n${prRestMetadata[metadataKey].description}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
+    if (!prRestMetadata[metadataKey]) {
+      return overview;
+    }
+
+    return `${overview}## ${camelCaseToNormal(metadataKey)}\n${prRestMetadata[metadataKey]}${prMetadataKeys.length - 1 === index ? '' : '\n'}`;
   }, '');
 
   return prOverview;
@@ -139,7 +151,7 @@ function formatPullRequestMessage(pullData, prMessageMeta) {
     prUrl: prMessageMeta.url,
     requester: prMessageMeta?.author?.name,
     title: pullRequestTitle,
-    howToTest: howToTest?.description || '',
+    howToTest: howToTest || '',
     overview: prOverview,
   });
 }
