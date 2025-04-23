@@ -119,7 +119,7 @@ const sendPointAwardMessages = async ({ pollFields, message }) => {
 
 module.exports = {
   name: Events.MessageUpdate,
-  async execute(_client, message) {
+  async execute(client, message) {
     try {
       const { author, poll: votationPoll } = message;
       const isCurrentBotAuthor = author?.id === message.client.user.id;
@@ -130,7 +130,7 @@ module.exports = {
         return;
       }
 
-      const prChannel = await _client.channels.fetch(message.channelId);
+      const prChannel = await client.channels.fetch(message.channelId);
       const pollMessage = await prChannel.messages.fetch(message.id);
       const { poll: pollVotation } = pollMessage;
 
