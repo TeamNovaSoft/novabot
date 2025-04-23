@@ -45,22 +45,22 @@ function getTopVoted(pollAnswers) {
   }
 
   let maxVoteCount = 0;
-  const topVoted = [];
+  const topVoteds = [];
 
   for (const pollAnswer of pollAnswers.values()) {
     if (pollAnswer.voteCount > maxVoteCount) {
       maxVoteCount = pollAnswer.voteCount;
-      topVoted.length = 0;
-      topVoted.push(parseInt(pollAnswer.text, 10));
+      topVoteds.length = 0;
+      topVoteds.push(parseInt(pollAnswer.text, 10));
     } else if (
       pollAnswer.voteCount !== 0 &&
       pollAnswer.voteCount === maxVoteCount
     ) {
-      topVoted.push(parseInt(pollAnswer.text, 10));
+      topVoteds.push(parseInt(pollAnswer.text, 10));
     }
   }
 
-  return topVoted.length > 0 ? topVoted : [maxVoteCount];
+  return topVoteds.length > 0 ? topVoteds : [maxVoteCount];
 }
 
 const calculatePoints = (topOptions) => {
