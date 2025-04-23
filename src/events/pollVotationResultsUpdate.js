@@ -74,7 +74,7 @@ const calculatePoints = (topOptions) => {
       max: () => Math.max(...topOptions),
       round: () =>
         Math.round(topOptions.reduce((a, b) => a + b, 0) / topOptions.length),
-    }[VOTE_POINTS.operationMode]() || Math.max(...topOptions)
+    }[VOTE_POINTS.voteDrawMode]() || Math.max(...topOptions)
   );
 };
 

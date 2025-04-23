@@ -125,7 +125,7 @@ const VOTE_POINTS = {
     boostedPointTagId:
       process.env.ADD_BOOSTED_POINT_TAG_ID || '1263873487953592381',
   },
-  operationMode: process.env.OP_MODE || 'max',
+  voteDrawMode: process.env.VOTE_DRAW_MODE || 'max',
 };
 
 const GEMINI_INTEGRATION = {
