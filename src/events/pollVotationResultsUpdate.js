@@ -78,12 +78,6 @@ function getWinningPollOption(pollAnswers) {
   return calculatePollResult(topVoteds);
 }
 
-const getFinalResult = (pollAnswers) => {
-  const finalResultOptions = getWinningPollOption(pollAnswers);
-
-  return finalResultOptions;
-};
-
 const sendPointAwardMessages = async ({ pollFields, message }) => {
   const { client, channelId } = message;
 
@@ -97,7 +91,7 @@ const sendPointAwardMessages = async ({ pollFields, message }) => {
   const userMentioned = userMention(userId);
   const selectedTagId = roleMention(getPointType(pointType));
 
-  const finalResult = getFinalResult(pollFields.answers);
+  const finalResult = getWinningPollOption(pollFields.answers);
 
   if (!finalResult) {
     return await message.reply(translateLanguage('votePoints.invalidResult'));
