@@ -28,42 +28,11 @@ const parseQuestionInput = (questionField) => {
   };
 };
 
-/**
- * Retrieves the element(s) with the highest 'voteCount' from a question answers collection.
- * In case of a tie, it returns all elements that share the maximum count.
- *
- * @param {Map<any, { id: any, text: string, voteCount: number }>} pollAnswers -
- * The collection of PollAnswer objects (or similar) to analyze. It is expected that the
- * values of the collection are objects with the properties 'id', 'text', and 'voteCount'.
- * @returns {Array<{ id: any, text: string, voteCount: number }>} -
- * An array containing the object(s) with the highest 'voteCount'.
- * Returns an empty array if the collection is empty or null.
- */
-function getTopVoted(pollAnswers) {
-  if (!pollAnswers || pollAnswers.size === 0) {
-    return [];
+const calculatePollResult = (topOptions) => {
+  if (topOptions.length === 0) {
+    return 0;
   }
 
-  let maxVoteCount = 0;
-  const topVoteds = [];
-
-  for (const pollAnswer of pollAnswers.values()) {
-    if (pollAnswer.voteCount > maxVoteCount) {
-      maxVoteCount = pollAnswer.voteCount;
-      topVoteds.length = 0;
-      topVoteds.push(parseInt(pollAnswer.text, 10));
-    } else if (
-      pollAnswer.voteCount !== 0 &&
-      pollAnswer.voteCount === maxVoteCount
-    ) {
-      topVoteds.push(parseInt(pollAnswer.text, 10));
-    }
-  }
-
-  return topVoteds.length > 0 ? topVoteds : [maxVoteCount];
-}
-
-const calculatePoints = (topOptions) => {
   if (topOptions.length === 1) {
     return topOptions[0];
   }
@@ -78,11 +47,41 @@ const calculatePoints = (topOptions) => {
   );
 };
 
-const getFinalResult = (pollAnswers) => {
-  const finalResultOptions = getTopVoted(pollAnswers);
-  const finalPoints = calculatePoints(finalResultOptions);
+/**
+ * Determines the final result of a poll based on the vote counts of the answers.
+ *
+ * @param {Map<any, { id: any, text: string, voteCount: number }>} pollAnswers -
+ * The collection of PollAnswer objects (or similar) to analyze. It is expected that the
+ * values of the collection are objects with the properties 'id', 'text', and 'voteCount'.
+ * @returns {number} -
+ * Returns the result of the top-voted answer(s).
+ */
+function getWinningPollOption(pollAnswers) {
+  if (!pollAnswers || pollAnswers.size === 0) {
+    return 0;
+  }
 
-  return finalPoints;
+  let maxVoteCount = 0;
+  let topVoteds = [];
+
+  pollAnswers.forEach(({ voteCount, text }) => {
+    const isVoteGreaterThanMaximum = voteCount > maxVoteCount;
+
+    if (isVoteGreaterThanMaximum) {
+      maxVoteCount = voteCount;
+      topVoteds = [parseInt(text, 10)];
+    } else if (voteCount !== 0 && voteCount === maxVoteCount) {
+      topVoteds.push(parseInt(text, 10));
+    }
+  });
+
+  return calculatePollResult(topVoteds);
+}
+
+const getFinalResult = (pollAnswers) => {
+  const finalResultOptions = getWinningPollOption(pollAnswers);
+
+  return finalResultOptions;
 };
 
 const sendPointAwardMessages = async ({ pollFields, message }) => {
