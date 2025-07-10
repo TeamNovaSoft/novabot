@@ -6,7 +6,12 @@
     "invalidStatus": "Estado no válido.",
     "updatedStatus": "Estado actualizado a {{status}}",
     "error": "Ocurrió un error al actualizar el estado.",
-    "messageOption": "Envia un mensage para detallar tus cambios"
+    "messageOption": "Envia un mensage para detallar tus cambios",
+    "statusChanged": "Estado cambiado a {{status}}",
+    "selectStatus": "Elige tu estado",
+    "placeholder": "Haz una selección",
+    "markdownMessage": "Estado del canal cambiado",
+    "statusUpdatedSuccesfully": "Estado actualizado exitosamente!"
   },
   "convertTime": {
     "description": "Convertir hora entre zonas horarias",
@@ -207,7 +212,6 @@
     "errorButton": "Hubo un error al procesar la interacción del botón.",
     "errorSubmission": "Hubo un error al procesar tu envío."
   },
-
   "assignPoints": {
     "description": "Asignar puntos manualmente a un usuario (solo rol admin)",
     "userOption": "Usuario que recibirá los puntos",
@@ -220,5 +224,18 @@
     "errorAssigning": "Hubo un error al asignar puntos. Por favor, intenta de nuevo más tarde.",
     "normalPoints": "puntos normales",
     "boostedPoints": "puntos potenciados"
+  },
+  "pullRequestOpen": {
+    "errorExtractDataFromURL": "Error al extraer el nombre del repositorio o el número de PR de la URL.",
+    "errorFetchPR": "Error al intentar obtener datos del PR. URL: {{prURL}}. Estado: {{status}}"
+  },
+  "assignTaskForum": {
+    "description": "Asigna la etiqueta de usuario a una tarea publicada en el foro.",
+    "userOption": "Usuario para asignar",
+    "isNotForumThread": "Este hilo no es de un foro para asignar tareas.",
+    "userTagNotAvailable": "Este usuario no está disponible en las etiquetas.",
+    "userAssignedTask": "Este usuario ya está asignado en esta tarea",
+    "taskAssignedSuccessful": "¡Esta tarea se asignó exitosamente!",
+    "error": "Ocurrió un error al asignar la tarea."
   }
 }

@@ -52,7 +52,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/aws_key.pem ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }} << EOF
             cd $DEPLOY_PATH
-            git pull origin $ENV
+            git pull origin ${{ github.base_ref }}
             yarn install
             pm2 restart $PM2_NAME || pm2 start ecosystem.config.js --name "$PM2_NAME"
           EOF
