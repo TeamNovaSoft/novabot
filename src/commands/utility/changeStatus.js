@@ -18,6 +18,7 @@ const createStatusMenu = (channel) => {
       Object.keys(MAPPED_STATUS_COMMANDS[selectedChannel]).map((status) => {
         return new StringSelectMenuOptionBuilder()
           .setLabel(status)
+          .setDescription(status)
           .setValue(status);
       })
     );
@@ -27,47 +28,17 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('change-status')
     .setDescription(translateLanguage('changeStatus.description'))
-    .setDescriptionLocalizations(keyTranslations('changeStatus.description'))
-    .addStringOption((option) =>
-      option
-        .setName('message')
-        .setDescription(translateLanguage('changeStatus.messageOption'))
-        .setDescriptionLocalizations(
-          keyTranslations('changeStatus.messageOption')
-        )
-        .setRequired(false)
-    ),
+    .setDescriptionLocalizations(keyTranslations('changeStatus.description')),
   async execute(interaction) {
     try {
-      const { channel, user } = interaction;
+      const { channel } = interaction;
       const selectMenu = createStatusMenu(channel.name);
-      const message = interaction.options.getString('message');
-
-      if (!interaction.channel.isThread()) {
-        return await interaction.editReply({
-          content: translateLanguage('changeStatus.notAThread'),
-          ephemeral: true,
-        });
-      }
 
       const row = new ActionRowBuilder().addComponents(selectMenu);
 
       await interaction.reply({
         content: translateLanguage('changeStatus.selectStatus'),
         components: [row],
-      });
-
-      if (message) {
-        const markdownMessage =
-          `# ${translateLanguage('changeStatus.markdownMessage')}\n\n` +
-          `${message}\n\n` +
-          `> ${user}`;
-
-        await channel.send(markdownMessage);
-      }
-
-      await interaction.followUp({
-        content: translateLanguage('changeStatus.statusUpdatedSuccesfully'),
       });
     } catch (error) {
       console.error(error);

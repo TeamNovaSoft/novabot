@@ -180,13 +180,6 @@ const GITHUB_PUBLISH_OPENED_PR = {
   githubPRPublishEnabled: process.env.GITHUB_PR_PUBLISH_ENABLED === 'true',
 };
 
-const ASSIGN_TASK_FORUM = {
-  tags: {
-    availableTagId: process.env.AVAILABLE_TAG_ID,
-    assignedTagId: process.env.ASSIGNED_TAG_ID,
-  },
-};
-
 module.exports = {
   LISTEN_NEW_EVENTS,
   DISCORD_SERVER,
@@ -203,5 +196,4 @@ module.exports = {
   FIREBASE_CONFIG,
   ADMIN_ROLE_ID,
   GITHUB_PUBLISH_OPENED_PR,
-  ASSIGN_TASK_FORUM,
 };
