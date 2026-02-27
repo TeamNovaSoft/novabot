@@ -19,7 +19,7 @@ const clearAllCronJobs = () => {
   activeCronJobs = [];
 };
 
-const generateReminderCronExpression = (event) => {
+const generateReminderCronExpression = (event, timeZone) => {
   const now = new Date();
   const eventEndTimeDate = new Date(event.scheduledEndTimestamp);
   const timeDifference = eventEndTimeDate - now;
@@ -35,7 +35,7 @@ const generateReminderCronExpression = (event) => {
     );
   }
 
-  return dateToCronExpression(reminderTime);
+  return dateToCronExpression(reminderTime.toISOString(), timeZone);
 };
 
 const sentEventReminder = async (event, eventAnnouncementChannel) => {
@@ -64,7 +64,7 @@ const sentEventReminder = async (event, eventAnnouncementChannel) => {
  */
 const scheduleEventReminder = ({ client, event, channelId, timeZone }) => {
   try {
-    const cronExpression = generateReminderCronExpression(event);
+    const cronExpression = generateReminderCronExpression(event, timeZone);
 
     if (!cronExpression) {
       return;

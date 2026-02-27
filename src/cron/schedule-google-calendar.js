@@ -74,7 +74,10 @@ const scheduleEventNotification = async ({ client, event }) => {
   const startDate = new Date(event.start.dateTime);
   startDate.setMinutes(startDate.getMinutes() - minutesBeforeEvent);
 
-  const cronExpression = dateToCronExpression(startDate);
+  const cronExpression = dateToCronExpression(
+    startDate.toISOString(),
+    event.start.timeZone
+  );
   const job = new CronJob(
     cronExpression,
     async () => {
