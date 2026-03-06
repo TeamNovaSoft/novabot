@@ -2,7 +2,6 @@ const { CronJob } = require('cron');
 const { listEvents } = require('../../calendar');
 const { EmbedBuilder } = require('discord.js');
 const { translateLanguage } = require('../languages');
-const dateToCronExpression = require('../utils/date-to-cron-expression');
 const convertCronToText = require('../utils/cron-to-text-parser');
 const {
   FIREBASE_CONFIG,
@@ -13,6 +12,45 @@ const {
 let activeCronJobs = [];
 
 const minutesBeforeEvent = 10;
+
+/**
+ * Converts a date to a CRON expression in the specified timezone.
+ * This ensures the cron expression matches the intended time in the event's timezone,
+ * preventing timezone offset issues when the server is in a different timezone.
+ *
+ * @param {Date} date - The date to convert.
+ * @param {string} timeZone - The IANA timezone identifier (e.g., 'America/Argentina/Buenos_Aires').
+ * @returns {string} A CRON expression derived from the provided date in the specified timezone.
+ *
+ * @example
+ * dateToCronExpressionInTimezone(new Date('2025-01-22T15:30:00'), 'America/Bogota');
+ * // Returns '30 15 22 1 *'
+ */
+const dateToCronExpressionInTimezone = (date, timeZone) => {
+  const options = {
+    timeZone,
+    minute: 'numeric',
+    hour: 'numeric',
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour12: false,
+  };
+
+  // Get date components in the target timezone
+  const formatter = new Intl.DateTimeFormat('en-US', options);
+  const parts = formatter.formatToParts(date);
+
+  const getPart = (type) =>
+    parseInt(parts.find((p) => p.type === type)?.value, 10);
+
+  const minutes = getPart('minute');
+  const hours = getPart('hour');
+  const day = getPart('day');
+  const month = getPart('month');
+
+  return `${minutes} ${hours} ${day} ${month} *`;
+};
 
 const clearAllCronJobs = () => {
   activeCronJobs.forEach((job) => job.stop());
@@ -74,7 +112,12 @@ const scheduleEventNotification = async ({ client, event }) => {
   const startDate = new Date(event.start.dateTime);
   startDate.setMinutes(startDate.getMinutes() - minutesBeforeEvent);
 
-  const cronExpression = dateToCronExpression(startDate);
+  // Use timezone-aware cron expression to ensure correct scheduling
+  // regardless of the server's local timezone
+  const cronExpression = dateToCronExpressionInTimezone(
+    startDate,
+    event.start.timeZone
+  );
   const job = new CronJob(
     cronExpression,
     async () => {
