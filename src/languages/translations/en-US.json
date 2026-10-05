@@ -6,7 +6,12 @@
     "invalidStatus": "Invalid status command.",
     "updatedStatus": "Status updated to {{status}}",
     "error": "An error occurred while updating the status.",
-    "messageOption": "Send a message to detail your changes"
+    "messageOption": "Send a message to detail your changes",
+    "statusChanged": "Status changed to {{status}}",
+    "selectStatus": "Choose your status",
+    "placeholder": "Make a selection",
+    "markdownMessage": "Channel status changed",
+    "statusUpdatedSuccesfully": "Status updated successfully!"
   },
   "convertTime": {
     "description": "Convert time between time zones",
@@ -206,7 +211,6 @@
     "errorButton": "There was an error processing your button interaction.",
     "errorSubmission": "There was an error processing your submission."
   },
-
   "assignPoints": {
     "description": "Manually assign points to a user (admin role only)",
     "userOption": "User who will receive the points",
@@ -219,5 +223,18 @@
     "errorAssigning": "There was an error assigning points. Please try again later.",
     "normalPoints": "Normal Points",
     "boostedPoints": "Boosted Points"
+  },
+  "pullRequestOpen": {
+    "errorExtractDataFromURL": "Error extracting repository or PR number from URL.",
+    "errorFetchPR": "Error trying to fetch PR data to {{prURL}}. URL: {{prURL}}. status: {{status}}"
+  },
+  "assignTaskForum": {
+    "description": "Assign the user tag to a task posted on the forum.",
+    "userOption": "User to assign",
+    "isNotForumThread": "This thread is not from a forum for assigning tasks.",
+    "userTagNotAvailable": "This user is not available in tags.",
+    "userAssignedTask": "This user is already assigned in this task",
+    "taskAssignedSuccessful": "This task was assigned successfully!",
+    "error": "An error occurred while assigning the task."
   }
 }

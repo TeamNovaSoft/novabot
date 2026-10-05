@@ -18,14 +18,36 @@ const LISTEN_NEW_EVENTS = {
 
 const MAPPED_STATUS_COMMANDS = {
   // unicode emojis
-  'pr-request-review': '❗',
-  'pr-request-changes': '🔁',
-  'pr-approved-by-code-review': '👍',
-  'pr-task-cancelled': '🚫',
-  'pr-work-in-progress': '👷🏾',
-  'pr-merged-on-staging': '🟡',
-  'pr-merged-in-prod': '🟢',
-  'pr-done': '✅',
+  novabot: {
+    'pr-request-review': '❗',
+    'pr-request-changes': '🔁',
+    'pr-approved-by-code-review': '👍',
+    'pr-task-cancelled': '🚫',
+    'pr-work-in-progress': '👷🏾',
+    'pr-merged-on-dev': '🟡',
+    'pr-merged-in-prod': '🟢',
+    'pr-done': '✅',
+  },
+  'i18n-populator': {
+    'pr-request-review': '❗',
+    'pr-request-changes': '🔁',
+    'pr-approved-by-code-review': '👍',
+    'pr-task-cancelled': '🚫',
+    'pr-work-in-progress': '👷🏾',
+    'pr-merged-on-dev': '🟡',
+    'pr-merged-in-master': '🟢',
+    'pr-done': '✅',
+  },
+  'evo-crypter': {
+    'pr-request-review': '❗',
+    'pr-request-changes': '🔁',
+    'pr-approved-by-code-review': '👍',
+    'pr-task-cancelled': '🚫',
+    'pr-work-in-progress': '👷🏾',
+    'pr-merged-on-staging': '🟡',
+    'pr-merged-in-prod': '🟢',
+    'pr-done': '✅',
+  },
 };
 
 const PR_TEMPLATE = {
@@ -51,8 +73,8 @@ const REQUEST_POINT = {
 };
 
 const SCHEDULE_MESSAGES = {
-  timeZone: process.env.TIME_ZONE,
-  pathMarkdownFolder: path.join(process.cwd(), '/markdown-files'),
+  timeZone: process.env.TIME_ZONE || 'America/Bogota',
+  pathMarkdownFolder: path.join(process.cwd(), '/bot-schedule-messages'),
 };
 
 const SCHEDULE_CALENDAR = {
@@ -103,6 +125,7 @@ const VOTE_POINTS = {
     boostedPointTagId:
       process.env.ADD_BOOSTED_POINT_TAG_ID || '1263873487953592381',
   },
+  voteDrawMode: process.env.VOTE_DRAW_MODE || 'max',
 };
 
 const GEMINI_INTEGRATION = {
@@ -151,6 +174,19 @@ const ADMIN_ROLE_ID = {
   adminRole: process.env.ADMIN_ROLE_ID || '1014267063788908585',
 };
 
+const GITHUB_PUBLISH_OPENED_PR = {
+  githubPRReviewChannel: process.env.GITHUB_PR_REVIEW_CHANNEL,
+  githubOrganizationPAT: process.env.GITHUB_ACCESS_TOKEN,
+  githubPRPublishEnabled: process.env.GITHUB_PR_PUBLISH_ENABLED === 'true',
+};
+
+const ASSIGN_TASK_FORUM = {
+  tags: {
+    availableTagId: process.env.AVAILABLE_TAG_ID,
+    assignedTagId: process.env.ASSIGNED_TAG_ID,
+  },
+};
+
 module.exports = {
   LISTEN_NEW_EVENTS,
   DISCORD_SERVER,
@@ -166,4 +202,6 @@ module.exports = {
   CRON_STATUS_REMINDER,
   FIREBASE_CONFIG,
   ADMIN_ROLE_ID,
+  GITHUB_PUBLISH_OPENED_PR,
+  ASSIGN_TASK_FORUM,
 };
